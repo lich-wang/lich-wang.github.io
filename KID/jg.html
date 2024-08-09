@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品价格表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.8em; /* 更大字体 */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%; /* 充满页面宽度 */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 20px; /* 增大单元格填充 */
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .description {
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            font-size: 0.6em; /* 适当缩小说明文字 */
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>渐变色巴黎奥运会口哨</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>渐变色活动蚂蚁</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>夜光活动蚂蚁</td>
+            <td>8</td>
+        </tr>
+        
+        <tr>
+            <td>蓝绿色鲨鱼</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>28厘米渐变色关节龙</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>28厘米粉金色关节龙</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>渐变色伸缩龙魔杖</td>
+            <td>30</td>
+        </tr>
+        <tr>
+            <td>渐变色龙蛋（送渐变色龙）</td>
+            <td>50</td>
+        </tr>
+    </table>
+    <div class="description">
+        我们使用的是可再生的PLA材料打印，来源于玉米和甘蔗。请小心使用活动关节，避免大力操作。
+    </div>
+</body>
+</html>
