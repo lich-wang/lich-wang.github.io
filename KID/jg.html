@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <title>商品价格表</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            transform: rotate(180deg); /* 整个页面上下颠倒 */
+        }
+        table {
+            border-collapse: collapse;
+            width: 95vw; /* 占用95%的屏幕宽度 */
+            height: 95vw; /* 占用95%的屏幕高度 */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th {
+            font-size: 4.5vw; /* 标题列字体大小固定 */
+            padding: 1vh;
+        }
+        td {
+            border: 1px solid #ddd;
+            padding: 1vh; /* 减少单元格填充 */
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .description {
+            width: 95vw; /* 占用95%的屏幕宽度 */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 1vh; /* 减少填充 */
+            text-align: center;
+            font-size: 3.5vw; /* 说明文字字体大小固定 */
+            margin-top: 1vh;
+        }
+    </style>
+</head>
+<body>
+    <table role="table" id="priceTable">
+        <thead>
+            <tr>
+                <th scope="col">商品</th>
+                <th scope="col">价格 (¥)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>渐变色巴黎奥运会口哨</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>渐变色活动蚂蚁</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>夜光活动蚂蚁</td>
+                <td>8</td>
+            </tr>
+            <tr>
+                <td>蓝绿色鲨鱼/鲸鱼</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>28厘米渐变色关节龙</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>28厘米粉金色关节龙</td>
+                <td>20</td>
+            </tr>
+            <tr>
+                <td>不可能穿越弹簧球</td>
+                <td>25</td>
+            </tr>
+            <tr>
+                <td>渐变色可动麒麟</td>
+                <td>65</td>
+            </tr>
+            <tr>
+                <td>渐变色可动飞龙</td>
+                <td>35</td>
+            </tr>
+            <tr>
+                <td>渐变色龙蛋（送小龙）</td>
+                <td>50</td>
+            </tr>
+            <tr>
+                <td>渐变12CM 小龙</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>夜光黄紧箍圈</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>夜光黄伸缩金箍棒</td>
+                <td>45</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="description">
+        我们使用的是可再生的PLA材料打印，来源于玉米和甘蔗。请小心使用活动关节，避免大力操作。
+    </div>
+
+    <script>
+        function adjustFontSize() {
+            const table = document.getElementById('priceTable');
+            const rows = table.getElementsByTagName('tr');
+            const tableHeight = table.clientHeight;
+            const rowCount = rows.length;
+            const availableHeight = tableHeight - rows[0].clientHeight; // 减去标题行高度
+            const fontSize = (availableHeight / (rowCount - 1)) * 0.5; // 根据行数和表格可用高度计算字体大小
+
+            for (let i = 1; i < rows.length; i++) { // 从第二行开始调整
+                rows[i].style.fontSize = `${fontSize}px`;
+            }
+        }
+
+        window.onload = adjustFontSize;
+        window.onresize = adjustFontSize;
+    </script>
+</body>
+</html>

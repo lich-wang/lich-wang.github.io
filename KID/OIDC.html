@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OIDC Demo</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/oidc-client/1.10.1/oidc-client.min.js"></script>
+</head>
+<body>
+  <h1>OIDC Demo</h1>
+  <button id="login">Login</button>
+  <button id="logout">Logout</button>
+  <pre id="id-token"></pre>
+
+  <script>
+    const config = {
+      authority: "https://testwcf.enterprise.dev-iam.jlrinfo.cn/auth/oauth2/realms/root/realms/enterprise/",
+      client_id: "testwcf",
+      redirect_uri:  "https://blog.lich.tech/KID/OIDC.html",
+      response_type: "code",
+      scope: "openid profile ",
+      post_logout_redirect_uri: "https://blog.lich.tech/KID/OIDC.html"
+    };
+
+    const userManager = new Oidc.UserManager(config);
+
+    document.getElementById('login').addEventListener('click', () => {
+      userManager.signinRedirect();
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      userManager.signoutRedirect();
+    });
+
+    userManager.getUser().then(user => {
+      if (user) {
+        document.getElementById('id-token').textContent = JSON.stringify(user.id_token, null, 2);
+      }
+    });
+
+    // 处理重定向后的回调
+    userManager.signinRedirectCallback().then(user => {
+      console.log('Callback success', user);
+      document.getElementById('id-token').textContent = JSON.stringify(user.id_token, null, 2);
+    }).catch(err => {
+      console.error('Callback error', err);
+    });
+  </script>
+</body>
+</html>
