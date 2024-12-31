@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOTP 查看器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha.js"></script>
+    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .totp {
+            font-size: 2em;
+            color: #032b75;
+        }
+        .timer {
+            margin-top: 10px;
+            font-size: 1.5em;
+            color: #888;
+        }
+        .upload {
+            margin-top: 20px;
+        }
+        .button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #032b75;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TOTP 查看器</h1>
+        <div id="accountName"></div>
+        <div class="totp" id="totpCode">加载中...</div>
+        <div class="timer" id="timer">30</div>
+        <input type="file" id="upload" class="upload" accept="image/*">
+        <button id="parseButton" class="button" disabled>解析二维码</button>
+        <p id="log" style="margin-top: 20px; color: #666; font-size: 0.9em;"></p>
+    </div>
+
+    <script>
+        let uploadedFile = null;
+        let timerInterval = null;
+
+        // 辅助函数：解析 URL 查询参数
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                totp: params.get('totp'),
+            };
+        }
+
+        // Base32 解码函数
+        function base32Decode(base32) {
+            const base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+            let bits = "";
+            let result = "";
+
+            for (let i = 0; i < base32.length; i++) {
+                const val = base32Alphabet.indexOf(base32[i].toUpperCase());
+                if (val === -1) continue;
+                bits += val.toString(2).padStart(5, '0');
+            }
+
+            for (let i = 0; i + 8 <= bits.length; i += 8) {
+                result += String.fromCharCode(parseInt(bits.substring(i, i + 8), 2));
+            }
+
+            return result;
+        }
+
+        // 解码 Base64 并解析 TOTP URL
+        function parseTotpUrl(base64Url) {
+            try {
+                console.log("Base64 编码内容:", base64Url);
+                const decodedUrl = atob(base64Url);
+                console.log("Base64 解码结果:", decodedUrl);
+                const regex = /otpauth:\/\/totp\/([^:]+):([^?]+)\?secret=([^&]+)&period=(\d+)&digits=(\d+)/;
+                const match = decodedUrl.match(regex);
+
+                if (!match) {
+                    logError("无法解析 TOTP URL");
+                    return null;
+                }
+
+                return {
+                    issuer: decodeURIComponent(match[1]),
+                    account: decodeURIComponent(match[2]),
+                    secret: match[3],
+                    period: parseInt(match[4], 10),
+                    digits: parseInt(match[5], 10),
+                };
+            } catch (e) {
+                logError("Base64 解码失败: " + e.message);
+                return null;
+            }
+        }
+
+        // 生成 TOTP
+        function generateTotp(secret, time, period, digits) {
+            const epoch = Math.floor(time / 1000);
+            const counter = Math.floor(epoch / period);
+
+            const key = Uint8Array.from(base32Decode(secret), c => c.charCodeAt(0));
+            const counterBytes = new ArrayBuffer(8);
+            const counterView = new DataView(counterBytes);
+            counterView.setUint32(4, counter);
+
+            const shaObj = new jsSHA("SHA-1", "UINT8ARRAY");
+            shaObj.setHMACKey(key, "UINT8ARRAY");
+            shaObj.update(new Uint8Array(counterBytes));
+            const hmac = shaObj.getHMAC("UINT8ARRAY");
+
+            const offset = hmac[hmac.length - 1] & 0xf;
+            const code = ((hmac[offset] & 0x7f) << 24) |
+                         ((hmac[offset + 1] & 0xff) << 16) |
+                         ((hmac[offset + 2] & 0xff) << 8) |
+                         (hmac[offset + 3] & 0xff);
+            
+            return String(code % (10 ** digits)).padStart(digits, '0');
+        }
+
+        // 更新 TOTP 显示
+        function updateTotp() {
+            const params = getQueryParams();
+            if (!params.totp) {
+                document.getElementById('totpCode').innerText = '无效的 TOTP URL';
+                logError("未找到 TOTP 参数");
+                return;
+            }
+
+            const totpData = parseTotpUrl(params.totp);
+            if (!totpData) {
+                document.getElementById('totpCode').innerText = '解析失败';
+                return;
+            }
+
+            document.getElementById('accountName').innerHTML = `<strong>${totpData.issuer}</strong>: ${totpData.account}`;
+
+            function refresh() {
+                const currentCode = generateTotp(totpData.secret, Date.now(), totpData.period, totpData.digits);
+                document.getElementById('totpCode').innerText = currentCode;
+                startTimer(totpData.period, refresh);
+            }
+
+            refresh();
+        }
+
+        // 启动倒计时
+        function startTimer(period, onComplete) {
+            if (timerInterval) clearInterval(timerInterval);
+            const epoch = Math.floor(Date.now() / 1000);
+            let remaining = period - (epoch % period); // 计算当前周期的剩余秒数
+            document.getElementById('timer').innerText = remaining;
+            timerInterval = setInterval(() => {
+                remaining -= 1;
+                document.getElementById('timer').innerText = remaining;
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    onComplete(); // 调用刷新函数刷新验证码
+                }
+            }, 1000);
+        }
+
+        // 记录日志
+        function logError(message) {
+            document.getElementById('log').innerText = message;
+            console.error(message);
+        }
+
+        // 处理文件选择
+        document.getElementById('upload').addEventListener('change', function (event) {
+            uploadedFile = event.target.files[0];
+            document.getElementById('parseButton').disabled = !uploadedFile;
+        });
+
+        // 处理解析按钮点击事件
+        document.getElementById('parseButton').addEventListener('click', function () {
+            if (!uploadedFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0, img.width, img.height);
+
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    if (code) {
+                        const totpUrl = code.data;
+                        console.log("解析到的二维码内容:", totpUrl);
+                        window.location.search = `?totp=${btoa(totpUrl)}`;
+                    } else {
+                        logError("无法解析二维码");
+                    }
+                };
+            };
+            reader.readAsDataURL(uploadedFile);
+        });
+
+        // 初始化 TOTP 显示
+        updateTotp();
+    </script>
+</body>
+</html>
