@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.lich.tech","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="映射关系   服务 cloudflare domain cloudflare Port Server Port    路由控制台 https:&#x2F;&#x2F;gw.lich.tech 880 N&#x2F;A   Linux(ssh) N&#x2F;A 222 22   网盘(nextcloud) https:&#x2F;&#x2F;pan.lich.tech 8443 8443   书籍(calibre) https:&#x2F;&#x2F;bo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NAS恢复">
+<meta property="og:url" content="http://blog.lich.tech/2024/07/29/NAS%E6%81%A2%E5%A4%8D/index.html">
+<meta property="og:site_name" content="命匣隐匿之地">
+<meta property="og:description" content="映射关系   服务 cloudflare domain cloudflare Port Server Port    路由控制台 https:&#x2F;&#x2F;gw.lich.tech 880 N&#x2F;A   Linux(ssh) N&#x2F;A 222 22   网盘(nextcloud) https:&#x2F;&#x2F;pan.lich.tech 8443 8443   书籍(calibre) https:&#x2F;&#x2F;bo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-29T13:44:22.000Z">
+<meta property="article:modified_time" content="2025-05-24T23:46:49.217Z">
+<meta property="article:author" content="Lich Wang">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://blog.lich.tech/2024/07/29/NAS%E6%81%A2%E5%A4%8D/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://blog.lich.tech/2024/07/29/NAS%E6%81%A2%E5%A4%8D/","path":"2024/07/29/NAS恢复/","title":"NAS恢复"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NAS恢复 | 命匣隐匿之地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">命匣隐匿之地</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-sitemap fa-fw"></i>links</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-calendar"><a href="/%E6%97%A5%E5%BF%97/" rel="section"><i class="fa fa-calendar fa-fw"></i>calendar</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">映射关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%81%A2%E5%A4%8D"><span class="nav-number">2.</span> <span class="nav-text">系统恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH"><span class="nav-number">2.1.</span> <span class="nav-text">SSH</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E7%A7%81%E9%92%A5%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.1.</span> <span class="nav-text">恢复私钥文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%81%A2%E5%A4%8Dauthorized-keys"><span class="nav-number">2.1.2.</span> <span class="nav-text">恢复authorized_keys</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#frpc"><span class="nav-number">2.2.</span> <span class="nav-text">frpc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Github"><span class="nav-number">2.3.</span> <span class="nav-text">Github</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text">影音服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%9A%E5%AE%A2"><span class="nav-number">4.</span> <span class="nav-text">博客</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">代码</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Lich Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Lich Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lich-wang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lich-wang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lich.wang@gmail.com" title="E-Mail → mailto:lich.wang@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.lich.tech/2024/07/29/NAS%E6%81%A2%E5%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Lich Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="NAS恢复 | 命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NAS恢复
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-07-29 13:44:22" itemprop="dateCreated datePublished" datetime="2024-07-29T13:44:22+00:00">2024-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-24 23:46:49" itemprop="dateModified" datetime="2025-05-24T23:46:49+00:00">2025-05-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="映射关系"><a href="#映射关系" class="headerlink" title="映射关系"></a>映射关系</h2><table>
+<thead>
+<tr>
+<th>服务</th>
+<th>cloudflare domain</th>
+<th>cloudflare Port</th>
+<th>Server Port</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>路由控制台</td>
+<td><a target="_blank" rel="noopener" href="https://gw.lich.tech/">https://gw.lich.tech</a></td>
+<td>880</td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>Linux(ssh)</td>
+<td>N&#x2F;A</td>
+<td>222</td>
+<td>22</td>
+</tr>
+<tr>
+<td>网盘(nextcloud)</td>
+<td><a target="_blank" rel="noopener" href="https://pan.lich.tech/">https://pan.lich.tech</a></td>
+<td>8443</td>
+<td>8443</td>
+</tr>
+<tr>
+<td>书籍(calibre)</td>
+<td><a target="_blank" rel="noopener" href="https://book.lich.tech/">https://book.lich.tech</a></td>
+<td>583</td>
+<td>8083</td>
+</tr>
+<tr>
+<td>下载(qbit)</td>
+<td><a target="_blank" rel="noopener" href="https://qbit.lich.tech/">https://qbit.lich.tech/</a></td>
+<td>588</td>
+<td>8080</td>
+</tr>
+<tr>
+<td>电影(radarr)</td>
+<td><a target="_blank" rel="noopener" href="https://movie.lich.tech/">https://movie.lich.tech/</a></td>
+<td>7878</td>
+<td>7878</td>
+</tr>
+<tr>
+<td>剧集(sonarr)</td>
+<td><a target="_blank" rel="noopener" href="https://tv.lich.tech/">https://tv.lich.tech/</a></td>
+<td>8989</td>
+<td>8989</td>
+</tr>
+<tr>
+<td>种子(jackett)</td>
+<td>N&#x2F;A</td>
+<td></td>
+<td>9117</td>
+</tr>
+<tr>
+<td>影音(ombi)</td>
+<td>N&#x2F;A</td>
+<td></td>
+<td>3579</td>
+</tr>
+<tr>
+<td>字幕(bazarr)</td>
+<td>N&#x2F;A</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>动漫(bangumi)</td>
+<td>N&#x2F;A</td>
+<td></td>
+<td>7892</td>
+</tr>
+<tr>
+<td>SMB</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gitlab</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>drawio</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>plantuml</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>nginx</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>certbot</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>watchtower</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>homeassistant</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="系统恢复"><a href="#系统恢复" class="headerlink" title="系统恢复"></a>系统恢复</h2><h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><h4 id="恢复私钥文件"><a href="#恢复私钥文件" class="headerlink" title="恢复私钥文件"></a>恢复私钥文件</h4><h4 id="恢复authorized-keys"><a href="#恢复authorized-keys" class="headerlink" title="恢复authorized_keys"></a>恢复authorized_keys</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIlqewgvVeHx8b0+KrO7ucL2ynXNrIEq+isG07rYR2rf4HYSbaDxWk9ZspGSp4zxzc1OZ+nraofeRnlCX2ijMc0RfUE9nf9qPq7/J08SbQ96dz/pbKb2h5MHKk3UIfq0+40ZOoPpGqVZ0/qJdthBM9DdwB4V/xjJlKZojgLJzy3XheGYjGSfoTJjHK9HfvRxFrJXnLG9Lh0tYRZ/KE6ox129KaSSabQswTRpArzkKe88WaBWu6rV31+FDRirJxXZZ6pN0IS4mXTRViNhMc4KXk3fO5LxDHRCX9tCzr+FLBpDrhr6+aK7zU6Ur6i7wXNzNIoBXnhldZyHUuCBARG5wN4g5AjrUzQPZF3hFyZzRDR9ZLCxK0mWN4VchBDqgx9ST38NibyKFnMjerPVPyng9MvKllkqUUqulwTatElH+IfwFocn31O+vIP7et0Eii3PtJWFDXDQTl7FLOEFO8qDHpm04+b3bRq1GlGJIKcu+JJXIX67fQKQzzcmQ9C2f22f8= lichPC</span><br><span class="line">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9INiHnEXicATPWzDpADnw3edvp+iEKhkopHaRpyTk8 lich.wang@gmail.com</span><br></pre></td></tr></table></figure>
+<h3 id="frpc"><a href="#frpc" class="headerlink" title="frpc"></a>frpc</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># frpc.ini</span></span><br><span class="line">[common]</span><br><span class="line">server_addr = lich.tech</span><br><span class="line">server_port = 7000</span><br><span class="line"></span><br><span class="line">[ssh]</span><br><span class="line"><span class="built_in">type</span> = tcp</span><br><span class="line">local_port = 22</span><br><span class="line">remote_port = 222</span><br></pre></td></tr></table></figure>
+
+<h3 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.email <span class="string">&quot;lich.wang@gmail.com&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="影音服务"><a href="#影音服务" class="headerlink" title="影音服务"></a>影音服务</h2><h2 id="博客"><a href="#博客" class="headerlink" title="博客"></a>博客</h2><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/06/24/%E8%A5%BF%E5%AE%89%E8%AE%A1%E5%88%92/" rel="prev" title="西安计划">
+                  <i class="fa fa-angle-left"></i> 西安计划
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/02/3D-%E6%89%93%E5%8D%B0%E4%BB%B7%E6%A0%BC/" rel="next" title="3D 打印价格">
+                  3D 打印价格 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Lich Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"http://blog.lich.tech/2024/07/29/NAS%E6%81%A2%E5%A4%8D/"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+</body>
+</html>

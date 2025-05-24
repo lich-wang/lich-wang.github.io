@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.lich.tech","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="介绍SAML协议SAML( Security Assertion Markup Language)是一种标准化的身份认证协议，主要用于在不同的域（比如不同服务）之间安全地交换身份验证和授权数据。其技术文档可以在 OASIS(结构化信息标准促进组织)官方网站查看。 简要流程如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SAML 集成介绍">
+<meta property="og:url" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="命匣隐匿之地">
+<meta property="og:description" content="介绍SAML协议SAML( Security Assertion Markup Language)是一种标准化的身份认证协议，主要用于在不同的域（比如不同服务）之间安全地交换身份验证和授权数据。其技术文档可以在 OASIS(结构化信息标准促进组织)官方网站查看。 简要流程如下：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-1.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-2.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-3.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-4.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-5.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-6.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-7.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-8.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-9.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-10.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-11.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-12.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-13.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-14.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-15.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-16.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-17.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-18.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-19.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-20.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-22.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-21.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-23.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-24.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-25.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-26.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-27.png">
+<meta property="og:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-29.png">
+<meta property="article:published_time" content="2024-05-10T12:59:06.000Z">
+<meta property="article:modified_time" content="2025-05-24T23:46:49.217Z">
+<meta property="article:author" content="Lich Wang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-1.png">
+
+
+<link rel="canonical" href="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/","path":"2024/05/10/SAML-集成介绍/","title":"SAML 集成介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SAML 集成介绍 | 命匣隐匿之地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">命匣隐匿之地</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-sitemap fa-fw"></i>links</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-calendar"><a href="/%E6%97%A5%E5%BF%97/" rel="section"><i class="fa fa-calendar fa-fw"></i>calendar</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SAML%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.1.</span> <span class="nav-text">SAML协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SAML%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">SAML协议中的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SP-Service-Provider"><span class="nav-number">2.1.</span> <span class="nav-text">SP(Service Provider)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDP-Identity-Provider"><span class="nav-number">2.2.</span> <span class="nav-text">IDP(Identity Provider)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metadata%EF%BC%88%E5%85%83%E6%95%B0%E6%8D%AE%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">Metadata（元数据）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SAML%E6%96%AD%E8%A8%80"><span class="nav-number">2.4.</span> <span class="nav-text">SAML断言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">4.</span> <span class="nav-text">验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87Docker%E9%95%9C%E5%83%8F"><span class="nav-number">4.1.</span> <span class="nav-text">准备Docker镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96IDP"><span class="nav-number">4.2.</span> <span class="nav-text">初始化IDP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96SP"><span class="nav-number">4.3.</span> <span class="nav-text">初始化SP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AESAML%E5%85%83%E6%95%B0%E6%8D%AE"><span class="nav-number">4.4.</span> <span class="nav-text">配置SAML元数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8SAMLTrace%E8%BF%9B%E8%A1%8C%E8%B0%83%E8%AF%95%E8%B7%9F%E8%B8%AA"><span class="nav-number">4.5.</span> <span class="nav-text">使用SAMLTrace进行调试跟踪</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Lich Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Lich Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lich-wang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lich-wang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lich.wang@gmail.com" title="E-Mail → mailto:lich.wang@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Lich Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SAML 集成介绍 | 命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SAML 集成介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-05-10 12:59:06" itemprop="dateCreated datePublished" datetime="2024-05-10T12:59:06+00:00">2024-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-24 23:46:49" itemprop="dateModified" datetime="2025-05-24T23:46:49+00:00">2025-05-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="SAML协议"><a href="#SAML协议" class="headerlink" title="SAML协议"></a>SAML协议</h3><p>SAML( Security Assertion Markup Language)是一种标准化的身份认证协议，主要用于在不同的域（比如不同服务）之间安全地交换身份验证和授权数据。其技术文档可以在 <a target="_blank" rel="noopener" href="https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html">OASIS(结构化信息标准促进组织)</a>官方网站查看。</p>
+<p>简要流程如下：</p>
+<img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IkNMQVNTIiBoZWlnaHQ9IjI2NHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6NDYxcHg7aGVpZ2h0OjI2NHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQ2MSAyNjQiIHdpZHRoPSI0NjFweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PGRlZnMvPjxnPjwhLS1lbnRpdHkgdXNlci0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtZW50aXR5PSJ1c2VyIiBkYXRhLXNvdXJjZS1saW5lPSI0IiBkYXRhLXVpZD0iZW50MDAwMiIgaWQ9ImVudGl0eV91c2VyIj48ZWxsaXBzZSBjeD0iMzcuNDgyOSIgY3k9Ijg3LjkxNTkiIGZpbGw9IiNGMUYxRjEiIHJ4PSI4IiByeT0iOCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHBhdGggZD0iTTM3LjQ4MjksOTUuOTE1OSBMMzcuNDgyOSwxMjIuOTE1OSBNMjQuNDgyOSwxMDMuOTE1OSBMNTAuNDgyOSwxMDMuOTE1OSBNMzcuNDgyOSwxMjIuOTE1OSBMMjQuNDgyOSwxMzcuOTE1OSBNMzcuNDgyOSwxMjIuOTE1OSBMNTAuNDgyOSwxMzcuOTE1OSIgZmlsbD0ibm9uZSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjIuOTY1OCIgeD0iNiIgeT0iMTUyLjQxMSI+RW5kIFVzZXI8L3RleHQ+PC9nPjwhLS1lbnRpdHkgc3AtLT48ZyBjbGFzcz0iZW50aXR5IiBkYXRhLWVudGl0eT0ic3AiIGRhdGEtc291cmNlLWxpbmU9IjUiIGRhdGEtdWlkPSJlbnQwMDAzIiBpZD0iZW50aXR5X3NwIj48cmVjdCBmaWxsPSIjRjFGMUYxIiBoZWlnaHQ9IjM2LjI5NjkiIHJ4PSIyLjUiIHJ5PSIyLjUiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIgd2lkdGg9IjE2Ni43MTk3IiB4PSIyODguOTciIHk9IjQyLjQxNTkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDYuNzE5NyIgeD0iMjk4Ljk3IiB5PSI2NS40MTEiPldlYiBBcHBsaWNhdGlvbiAoU1ApPC90ZXh0PjwvZz48IS0tZW50aXR5IGlkcC0tPjxnIGNsYXNzPSJlbnRpdHkiIGRhdGEtZW50aXR5PSJpZHAiIGRhdGEtc291cmNlLWxpbmU9IjYiIGRhdGEtdWlkPSJlbnQwMDA0IiBpZD0iZW50aXR5X2lkcCI+PHJlY3QgZmlsbD0iI0YxRjFGMSIgaGVpZ2h0PSIzNi4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxNDEuMTY3IiB4PSIzMDEuNzQiIHk9IjE4NC40MTU5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTIxLjE2NyIgeD0iMzExLjc0IiB5PSIyMDcuNDExIj5JQU0gU3lzdGVtIChJRFApPC90ZXh0PjwvZz48IS0tbGluayB1c2VyIHRvIHNwLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9InVzZXIiIGRhdGEtZW50aXR5LTI9InNwIiBkYXRhLXNvdXJjZS1saW5lPSI4IiBkYXRhLXVpZD0ibG5rNSIgaWQ9ImxpbmtfdXNlcl9zcCI+PHBhdGggY29kZUxpbmU9IjgiIGQ9Ik01OS40MSw3OS4xNjU5IEM2OS4zNiw2NC45MjU5IDgyLjY3LDUwLjM1NTkgOTguOTcsNDIuNTY1OSBDMTY4LjY1LDkuMjQ1OSAyNTQuMjQwMywyNC4wMDk1IDMxMS40MzAzLDQwLjMyOTUiIGZpbGw9Im5vbmUiIGlkPSJ1c2VyLXRvLXNwIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIzMTcuMiw0MS45NzU5LDMwOS42NDMxLDM1LjY1OTgsMzEyLjM5MTksNDAuNjAzOSwzMDcuNDQ3OCw0My4zNTI3LDMxNy4yLDQxLjk3NTkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4NC42MjciIHg9IjEzNi45NyIgeT0iMTkuNjMyOCI+MS4gJiMyOTk5MjsmIzI1MTQzOyYjMzU3NzU7JiMzODM4MjtTUDwvdGV4dD48L2c+PCEtLWxpbmsgc3AgdG8gdXNlci0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJzcCIgZGF0YS1lbnRpdHktMj0idXNlciIgZGF0YS1zb3VyY2UtbGluZT0iOSIgZGF0YS11aWQ9ImxuazYiIGlkPSJsaW5rX3NwX3VzZXIiPjxwYXRoIGNvZGVMaW5lPSI5IiBkPSJNMzQ1LjYsNzkuMDU1OSBDMzIzLjc1LDkzLjU1NTkgMjkwLjkzLDExMi41NjU5IDI1OC45NywxMjAuNTY1OSBDMTkzLjA1LDEzNy4wNjU5IDExOC40NzYxLDEzMC4xMTkxIDc1LjMwNjEsMTIzLjc2OTEiIGZpbGw9Im5vbmUiIGlkPSJzcC10by11c2VyIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LjAsNy4wOyIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNjkuMzcsMTIyLjg5NTksNzcuNjkyMSwxMjguMTYzMSw3NC4zMTY4LDEyMy42MjM2LDc4Ljg1NjMsMTIwLjI0ODIsNjkuMzcsMTIyLjg5NTkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDUuMzEwNyIgeD0iMTA2LjQ3IiB5PSIxMTYuNjMyOCI+Mi4gU1AmIzM3MzI1OyYjMjYwMzI7JiMyMzQ1MDsmIzIxNTIxOyYjMjk5OTI7JiMyNTE0MzsmIzIxMDQwO0lEUDwvdGV4dD48L2c+PCEtLWxpbmsgdXNlciB0byBzcC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJ1c2VyIiBkYXRhLWVudGl0eS0yPSJzcCIgZGF0YS1zb3VyY2UtbGluZT0iMTIiIGRhdGEtdWlkPSJsbms5IiBpZD0ibGlua191c2VyX3NwIj48cGF0aCBjb2RlTGluZT0iMTIiIGQ9Ik02OS4zMywxMDcuNDM1OSBDNzguNzcsMTA0LjU5NTkgODkuMjMsMTAxLjY5NTkgOTguOTcsOTkuNTY1OSBDMTYxLjk2LDg1Ljc2NTkgMjI4LjI5MTksNzYuMzc0IDI4Mi41NjE5LDY5LjkyNCIgZmlsbD0ibm9uZSIgaWQ9InVzZXItdG8tc3AtMSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iMjg4LjUyLDY5LjIxNTksMjc5LjExMDgsNjYuMzA2LDI4My41NTQ5LDY5LjgwNiwyODAuMDU1LDc0LjI1MDEsMjg4LjUyLDY5LjIxNTkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5Ny42MjciIHg9IjEzMC40NyIgeT0iNzAuNjMyOCI+NS4gJiMyOTk5MjsmIzI1MTQzOyYjMzAzMzE7JiMyNDQwNTsmIzIxMDQwO1NQPC90ZXh0PjwvZz48IS0tbGluayB1c2VyIHRvIGlkcC0tPjxnIGNsYXNzPSJsaW5rIiBkYXRhLWVudGl0eS0xPSJ1c2VyIiBkYXRhLWVudGl0eS0yPSJpZHAiIGRhdGEtc291cmNlLWxpbmU9IjEwIiBkYXRhLXVpZD0ibG5rNyIgaWQ9ImxpbmtfdXNlcl9pZHAiPjxwYXRoIGNvZGVMaW5lPSIxMCIgZD0iTTY5LjI3LDE0MC4xMzU5IEM3OC40NCwxNDUuOTQ1OSA4OC43OCwxNTEuNjY1OSA5OC45NywxNTUuNTY1OSBDMTY0Ljk0LDE4MC44NDU5IDIzOS4xNTc3LDE5Mi4wMjAxIDI5NS4zNzc3LDE5Ny40NDAxIiBmaWxsPSJub25lIiBpZD0idXNlci10by1pZHAiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjMwMS4zNSwxOTguMDE1OSwyOTIuNzc1NCwxOTMuMTcwNywyOTYuMzczMSwxOTcuNTM2MSwyOTIuMDA3NywyMDEuMTMzOCwzMDEuMzUsMTk4LjAxNTkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjkuMjE5MyIgeD0iMTE0LjQ3IiB5PSIxNTEuNjMyOCI+My4gJiMyOTk5MjsmIzI1MTQzOyYjMjIzMTI7SURQJiMyMzQzNjsmIzI1MTA0OyYjMzc0OTI7JiMyNjQzNTs8L3RleHQ+PC9nPjwhLS1saW5rIGlkcCB0byB1c2VyLS0+PGcgY2xhc3M9ImxpbmsiIGRhdGEtZW50aXR5LTE9ImlkcCIgZGF0YS1lbnRpdHktMj0idXNlciIgZGF0YS1zb3VyY2UtbGluZT0iMTEiIGRhdGEtdWlkPSJsbms4IiBpZD0ibGlua19pZHBfdXNlciI+PHBhdGggY29kZUxpbmU9IjExIiBkPSJNMzIwLjQxLDIyMS4xNjU5IEMyNjIuNzIsMjM4Ljg3NTkgMTY3Ljc4LDI1Ny41NjU5IDk4Ljk3LDIxOC41NjU5IEM3NS40MSwyMDUuMjE1OSA2Mi4zMjksMTg0LjE2OCA1Mi45NzksMTYxLjYyOCIgZmlsbD0ibm9uZSIgaWQ9ImlkcC10by11c2VyIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTo3LjAsNy4wOyIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNTAuNjgsMTU2LjA4NTksNTAuNDMzNywxNjUuOTMxNyw1Mi41OTU4LDE2MC43MDQzLDU3LjgyMzIsMTYyLjg2NjQsNTAuNjgsMTU2LjA4NTkiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNTguMzEwNyIgeD0iOTkuOTciIHk9IjIxNC42MzI4Ij40LiBJRFAmIzM3MzI1OyYjMjYwMzI7JiMyMzQ1MDsmIzIxNTIxOyYjMjk5OTI7JiMyNTE0MzsmIzIyMjM4OyYjMjEwNDA7U1A8L3RleHQ+PC9nPjwhLS1TUkM9W29xYkRBcjRlb0xTZW9hcEZBNTU4b0luQUpJeDlwQ19aSWlwOW9JX0ZwUXA4cDRsZHVhZkNCaWFsS2Ixb3BLakgyMnJFQkw5SUkybk1BMEtvazQyZzRfRklTcjhMYkM5SmFuR1MybWZvQ2ZDSkdHT2VRMEc3UTg4TDVYU2U4QWxwVEZITDJBdWlCYWRETFQzbVQ4NmdvS21mdUU4MmNRWVdnc2k3cjY2Yk9BWWR5N3BBWWNTVHNyLWlzX3pvLWhoVzAyd1dFTmZ3VGMxeGhISUN6MUkyMHJ3c3pwd1Jqazdma2JiRjlxbzRBN3hRaUc1ZTlqbWFlQjVNMmlPbWF2eEVNRzZLVkJna3ZyZDdYOVVUTXZ4RFJVTzJBVzBQMlo3Skg0eTFBOF81cURkcFdFTzY4dW01a1N5S1BraHBjUmtWeGZxQUxXMDBdLS0+PC9nPjwvc3ZnPg=='>
+
+<span id="more"></span>
+
+<h2 id="SAML协议中的概念"><a href="#SAML协议中的概念" class="headerlink" title="SAML协议中的概念"></a>SAML协议中的概念</h2><h3 id="SP-Service-Provider"><a href="#SP-Service-Provider" class="headerlink" title="SP(Service Provider)"></a>SP(Service Provider)</h3><p>服务提供商（SP）是一个提供服务的实体，比如一个网站或应用。用户希望通过SP访问资源。在SAML身份认证过程中，SP是请求和接收关于用户身份信息的一方。</p>
+<h3 id="IDP-Identity-Provider"><a href="#IDP-Identity-Provider" class="headerlink" title="IDP(Identity Provider)"></a>IDP(Identity Provider)</h3><p>身份提供商（IDP）是负责认证用户身份并将这些信息提供给服务提供商的系统。在SAML流程中，当用户试图登录服务提供商提供的服务时，IDP负责验证用户的身份，并向SP发送断言来确认这一身份。</p>
+<h3 id="Metadata（元数据）"><a href="#Metadata（元数据）" class="headerlink" title="Metadata（元数据）"></a>Metadata（元数据）</h3><p>在SAML中，元数据是用来描述IDP（身份提供商）和SP（服务提供商）的配置信息的XML文档。它包括了以下几类重要信息：</p>
+<ul>
+<li>实体描述符 (md:IDPSSODescriptor&#x2F;md:SPSSODescriptor)：标识实体（IDP或SP）并包括关于实体的信息，如实体ID和服务位置。</li>
+<li>服务终点 (md:xxxxService )：提供服务地址，比如哪里可以发送SAML请求（如认证请求）或哪里可以接收SAML响应（如认证响应）。</li>
+<li>密钥信息 (md:KeyDescriptor)：用于签名和加密消息的公开密钥信息，确保信息的安全性。</li>
+<li>ID格式 (md:NameIDFormat)：说明实体支持用户ID格式。</li>
+</ul>
+<p>元数据的交换在SP和IDP之间建立信任关系和技术配置时进行。例如，在配置过程中，SP和IDP会相互提供自己的元数据，从而确保双方都有正确的信息来安全地发送和接收SAML消息。</p>
+<h3 id="SAML断言"><a href="#SAML断言" class="headerlink" title="SAML断言"></a>SAML断言</h3><p>SAML断言是由IDP创建并发送给SP的一种消息，它包含了验证用户身份的信息。断言通常包括以下几个部分：</p>
+<ul>
+<li>断言ID (saml:Assertion ID)：一个唯一标识符，用于区分不同的断言。</li>
+<li>发行者 (saml:Issuer)：创建断言的IDP的标识。</li>
+<li>主题 (saml:Subject)：关于用户的信息，通常包括用户的唯一标识符和可能的会话索引。</li>
+<li>条件 (saml:Conditions)：定义断言有效性的时间窗口和接收断言的SP的约束。</li>
+<li>属性声明 (saml:AttributeStatement)：具体的用户属性，如用户名、邮箱、角色等。</li>
+<li>身份验证声明 (saml:AuthnStatement)：包含用户身份验证成功的时间和方法的信息。</li>
+</ul>
+<p>在实际应用中，当用户尝试访问SP的资源时，SP会将用户重定向到IDP进行身份验证。用户在IDP成功认证后，IDP会创建一个SAML断言，包含用户的身份和属性信息，并将其发送回SP。SP接收到断言后，会验证断言的签名，确认其来自可信的IDP，并根据断言中的信息决定是否授权用户访问请求的资源。</p>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IlNFUVVFTkNFIiBoZWlnaHQ9IjY2OHB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6ODE5cHg7aGVpZ2h0OjY2OHB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDgxOSA2NjgiIHdpZHRoPSI4MTlweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PHRpdGxlPlNQIEluaXRpYXRlZCBTQU1MIExvZ2luIHdpdGggSUFNIFN5c3RlbTwvdGl0bGU+PGRlZnMvPjxnPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIzMjYuNDkxMiIgeD0iMjQ1Ljg3NyIgeT0iMjcuOTk1MSI+U1AgSW5pdGlhdGVkIFNBTUwgTG9naW4gd2l0aCBJQU0gU3lzdGVtPC90ZXh0PjxnPjx0aXRsZT5FbmQgVXNlcjwvdGl0bGU+PHJlY3QgZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjAwMDAwIiBoZWlnaHQ9IjQ2OC45OTIyIiB3aWR0aD0iOCIgeD0iMzUuNDgyOSIgeT0iMTE4LjU5MzgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtZGFzaGFycmF5OjUuMCw1LjA7IiB4MT0iMzkiIHgyPSIzOSIgeTE9IjExOC41OTM4IiB5Mj0iNTg3LjU4NTkiLz48L2c+PGc+PHRpdGxlPlVzZXIgQWdlbnQoIEJyb3dzZXIpPC90aXRsZT48cmVjdCBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDAwMDAiIGhlaWdodD0iNDY4Ljk5MjIiIHdpZHRoPSI4IiB4PSIyNzAuNjk0OCIgeT0iMTE4LjU5MzgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtZGFzaGFycmF5OjUuMCw1LjA7IiB4MT0iMjc0LjU4ODQiIHgyPSIyNzQuNTg4NCIgeTE9IjExOC41OTM4IiB5Mj0iNTg3LjU4NTkiLz48L2c+PGc+PHRpdGxlPldlYiBBcHBsaWNhdGlvbiAoU1ApPC90aXRsZT48cmVjdCBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDAwMDAiIGhlaWdodD0iNDY4Ljk5MjIiIHdpZHRoPSI4IiB4PSI1MjQuMjUxNSIgeT0iMTE4LjU5MzgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtZGFzaGFycmF5OjUuMCw1LjA7IiB4MT0iNTI3Ljg5MTYiIHgyPSI1MjcuODkxNiIgeTE9IjExOC41OTM4IiB5Mj0iNTg3LjU4NTkiLz48L2c+PGc+PHRpdGxlPklBTSBTeXN0ZW0gKElEUCk8L3RpdGxlPjxyZWN0IGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMDAwMCIgaGVpZ2h0PSI0NjguOTkyMiIgd2lkdGg9IjgiIHg9IjY4Mi4xOTQ4IiB5PSIxMTguNTkzOCIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41O3N0cm9rZS1kYXNoYXJyYXk6NS4wLDUuMDsiIHgxPSI2ODUuNjExMyIgeDI9IjY4NS42MTEzIiB5MT0iMTE4LjU5MzgiIHkyPSI1ODcuNTg1OSIvPjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtaGVhZCIgZGF0YS1wYXJ0aWNpcGFudD0idXNlciI+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNjIuOTY1OCIgeD0iNSIgeT0iMTE1LjI5MiI+RW5kIFVzZXI8L3RleHQ+PGVsbGlwc2UgY3g9IjM5LjQ4MjkiIGN5PSI1MC43OTY5IiBmaWxsPSIjOTBFRTkwIiByeD0iOCIgcnk9IjgiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIvPjxwYXRoIGQ9Ik0zOS40ODI5LDU4Ljc5NjkgTDM5LjQ4MjksODUuNzk2OSBNMjYuNDgyOSw2Ni43OTY5IEw1Mi40ODI5LDY2Ljc5NjkgTTM5LjQ4MjksODUuNzk2OSBMMjYuNDgyOSwxMDAuNzk2OSBNMzkuNDgyOSw4NS43OTY5IEw1Mi40ODI5LDEwMC43OTY5IiBmaWxsPSJub25lIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiLz48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LXRhaWwiIGRhdGEtcGFydGljaXBhbnQ9InVzZXIiPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjYyLjk2NTgiIHg9IjUiIHk9IjU5OS41ODExIj5FbmQgVXNlcjwvdGV4dD48ZWxsaXBzZSBjeD0iMzkuNDgyOSIgY3k9IjYxMS4zODI4IiBmaWxsPSIjOTBFRTkwIiByeD0iOCIgcnk9IjgiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIvPjxwYXRoIGQ9Ik0zOS40ODI5LDYxOS4zODI4IEwzOS40ODI5LDY0Ni4zODI4IE0yNi40ODI5LDYyNy4zODI4IEw1Mi40ODI5LDYyNy4zODI4IE0zOS40ODI5LDY0Ni4zODI4IEwyNi40ODI5LDY2MS4zODI4IE0zOS40ODI5LDY0Ni4zODI4IEw1Mi40ODI5LDY2MS4zODI4IiBmaWxsPSJub25lIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiLz48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LWhlYWQiIGRhdGEtcGFydGljaXBhbnQ9ImFnZW50Ij48cmVjdCBmaWxsPSIjOTBFRTkwIiBoZWlnaHQ9IjMwLjI5NjkiIHJ4PSIyLjUiIHJ5PSIyLjUiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIgd2lkdGg9IjE2NC4yMTI5IiB4PSIxOTIuNTg4NCIgeT0iODcuMjk2OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE1MC4yMTI5IiB4PSIxOTkuNTg4NCIgeT0iMTA3LjI5MiI+VXNlciBBZ2VudCggQnJvd3Nlcik8L3RleHQ+PC9nPjxnIGNsYXNzPSJwYXJ0aWNpcGFudCBwYXJ0aWNpcGFudC10YWlsIiBkYXRhLXBhcnRpY2lwYW50PSJhZ2VudCI+PHJlY3QgZmlsbD0iIzkwRUU5MCIgaGVpZ2h0PSIzMC4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxNjQuMjEyOSIgeD0iMTkyLjU4ODQiIHk9IjU4Ni41ODU5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTUwLjIxMjkiIHg9IjE5OS41ODg0IiB5PSI2MDYuNTgxMSI+VXNlciBBZ2VudCggQnJvd3Nlcik8L3RleHQ+PC9nPjxnIGNsYXNzPSJwYXJ0aWNpcGFudCBwYXJ0aWNpcGFudC1oZWFkIiBkYXRhLXBhcnRpY2lwYW50PSJzcCI+PHJlY3QgZmlsbD0iI0IwRTBFNiIgaGVpZ2h0PSIzMC4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxNjAuNzE5NyIgeD0iNDQ3Ljg5MTYiIHk9Ijg3LjI5NjkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDYuNzE5NyIgeD0iNDU0Ljg5MTYiIHk9IjEwNy4yOTIiPldlYiBBcHBsaWNhdGlvbiAoU1ApPC90ZXh0PjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtdGFpbCIgZGF0YS1wYXJ0aWNpcGFudD0ic3AiPjxyZWN0IGZpbGw9IiNCMEUwRTYiIGhlaWdodD0iMzAuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMTYwLjcxOTciIHg9IjQ0Ny44OTE2IiB5PSI1ODYuNTg1OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE0Ni43MTk3IiB4PSI0NTQuODkxNiIgeT0iNjA2LjU4MTEiPldlYiBBcHBsaWNhdGlvbiAoU1ApPC90ZXh0PjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtaGVhZCIgZGF0YS1wYXJ0aWNpcGFudD0iaWFtMiI+PHJlY3QgZmlsbD0iI0ZGQTUwMCIgaGVpZ2h0PSIzMC4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxMzUuMTY3IiB4PSI2MTguNjExMyIgeT0iODcuMjk2OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjEyMS4xNjciIHg9IjYyNS42MTEzIiB5PSIxMDcuMjkyIj5JQU0gU3lzdGVtIChJRFApPC90ZXh0PjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtdGFpbCIgZGF0YS1wYXJ0aWNpcGFudD0iaWFtMiI+PHJlY3QgZmlsbD0iI0ZGQTUwMCIgaGVpZ2h0PSIzMC4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxMzUuMTY3IiB4PSI2MTguNjExMyIgeT0iNTg2LjU4NTkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjEuMTY3IiB4PSI2MjUuNjExMyIgeT0iNjA2LjU4MTEiPklBTSBTeXN0ZW0gKElEUCk8L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9InVzZXIiIGRhdGEtcGFydGljaXBhbnQtMj0iYWdlbnQiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iMjYyLjY5NDgsMTQ1LjcyNjYsMjcyLjY5NDgsMTQ5LjcyNjYsMjYyLjY5NDgsMTUzLjcyNjYsMjY2LjY5NDgsMTQ5LjcyNjYiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMzkuNDgyOSIgeDI9IjI2OC42OTQ4IiB5MT0iMTQ5LjcyNjYiIHkyPSIxNDkuNzI2NiIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjIxMS4yMTE5IiB4PSI0Ni40ODI5IiB5PSIxNDQuNjYwNiI+SW1wbGllZCBsb2dpbiB0byBXZWIgQXBwbGljYXRpb248L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9ImFnZW50IiBkYXRhLXBhcnRpY2lwYW50LTI9InNwIj48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjUxNi4yNTE1LDE3NC44NTk0LDUyNi4yNTE1LDE3OC44NTk0LDUxNi4yNTE1LDE4Mi44NTk0LDUyMC4yNTE1LDE3OC44NTk0IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3NC42OTQ4IiB4Mj0iNTIyLjI1MTUiIHkxPSIxNzguODU5NCIgeTI9IjE3OC44NTk0Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTc0LjY2ODUiIHg9IjI4MS42OTQ4IiB5PSIxNzMuNzkzNSI+UmVkaXJlY3QgdG8gQXBwbGljYXRpb24oU1ApPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJzcCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJhZ2VudCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIyODUuNjk0OCwyMDMuOTkyMiwyNzUuNjk0OCwyMDcuOTkyMiwyODUuNjk0OCwyMTEuOTkyMiwyODEuNjk0OCwyMDcuOTkyMiIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIyNzkuNjk0OCIgeDI9IjUyNy4yNTE1IiB5MT0iMjA3Ljk5MjIiIHkyPSIyMDcuOTkyMiIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijg4LjI0NTEiIHg9IjI5MS42OTQ4IiB5PSIyMDIuOTI2MyI+UmVkaXJlY3QgVXNlcjwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0iYWdlbnQiIGRhdGEtcGFydGljaXBhbnQtMj0iaWFtMiI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI2NzQuMTk0OCwyMzMuMTI1LDY4NC4xOTQ4LDIzNy4xMjUsNjc0LjE5NDgsMjQxLjEyNSw2NzguMTk0OCwyMzcuMTI1IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3NC42OTQ4IiB4Mj0iNjgwLjE5NDgiIHkxPSIyMzcuMTI1IiB5Mj0iMjM3LjEyNSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE5NS43OTM1IiB4PSIyODEuNjk0OCIgeT0iMjMyLjA1OTEiPlZpYSBTUCBJbml0YWx0ZWQgU0FNTCBSZXF1ZXN0PC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJpYW0yIiBkYXRhLXBhcnRpY2lwYW50LTI9ImlhbTIiPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI2ODYuMTk0OCIgeDI9IjcyOC4xOTQ4IiB5MT0iMjgxLjM5MDYiIHkyPSIyODEuMzkwNiIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI3MjguMTk0OCIgeDI9IjcyOC4xOTQ4IiB5MT0iMjgxLjM5MDYiIHkyPSIyOTQuMzkwNiIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI2ODcuMTk0OCIgeDI9IjcyOC4xOTQ4IiB5MT0iMjk0LjM5MDYiIHkyPSIyOTQuMzkwNiIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNjk3LjE5NDgsMjkwLjM5MDYsNjg3LjE5NDgsMjk0LjM5MDYsNjk3LjE5NDgsMjk4LjM5MDYsNjkzLjE5NDgsMjk0LjM5MDYiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTkuMDUwMyIgeD0iNjkzLjE5NDgiIHk9IjI2MS4xOTE5Ij5WYWxpZGF0ZSBzaWduYXR1cmU8L3RleHQ+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTEyLjk3NTYiIHg9IjY5My4xOTQ4IiB5PSIyNzYuMzI0NyI+YW5kIFNQIGlzIFRydXN0ZWQ8L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9ImlhbTIiIGRhdGEtcGFydGljaXBhbnQtMj0iYWdlbnQiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iMjg1LjY5NDgsMzE5LjUyMzQsMjc1LjY5NDgsMzIzLjUyMzQsMjg1LjY5NDgsMzI3LjUyMzQsMjgxLjY5NDgsMzIzLjUyMzQiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMjc5LjY5NDgiIHgyPSI2ODUuMTk0OCIgeTE9IjMyMy41MjM0IiB5Mj0iMzIzLjUyMzQiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDQuMDY2NCIgeD0iMjkxLjY5NDgiIHk9IjMxOC40NTc1Ij5SZWRpcmVjdCB0byBsb2dpbiBwYWdlPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJhZ2VudCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJpYW0yIj48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjY3NC4xOTQ4LDM0OC42NTYzLDY4NC4xOTQ4LDM1Mi42NTYzLDY3NC4xOTQ4LDM1Ni42NTYzLDY3OC4xOTQ4LDM1Mi42NTYzIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3NC42OTQ4IiB4Mj0iNjgwLjE5NDgiIHkxPSIzNTIuNjU2MyIgeTI9IjM1Mi42NTYzIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTM4LjExMjMiIHg9IjI4MS42OTQ4IiB5PSIzNDcuNTkwMyI+R290IHRvIElEUCBsb2dpbiBQYWdlPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJpYW0yIiBkYXRhLXBhcnRpY2lwYW50LTI9ImFnZW50Ij48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjI4NS42OTQ4LDM3Ny43ODkxLDI3NS42OTQ4LDM4MS43ODkxLDI4NS42OTQ4LDM4NS43ODkxLDI4MS42OTQ4LDM4MS43ODkxIiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3OS42OTQ4IiB4Mj0iNjg1LjE5NDgiIHkxPSIzODEuNzg5MSIgeTI9IjM4MS43ODkxIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTIxLjM3MzUiIHg9IjI5MS42OTQ4IiB5PSIzNzYuNzIzMSI+QXNrIGZvciBjcmVkZW50aWFsczwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0idXNlciIgZGF0YS1wYXJ0aWNpcGFudC0yPSJhZ2VudCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIyNjIuNjk0OCw0MDYuOTIxOSwyNzIuNjk0OCw0MTAuOTIxOSwyNjIuNjk0OCw0MTQuOTIxOSwyNjYuNjk0OCw0MTAuOTIxOSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIzOS40ODI5IiB4Mj0iMjY4LjY5NDgiIHkxPSI0MTAuOTIxOSIgeTI9IjQxMC45MjE5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTExLjA2NDkiIHg9IjQ2LjQ4MjkiIHk9IjQwNS44NTYiPkVudGVyIGNyZWRlbnRpYWxzPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJhZ2VudCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJpYW0yIj48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjY3NC4xOTQ4LDQzNi4wNTQ3LDY4NC4xOTQ4LDQ0MC4wNTQ3LDY3NC4xOTQ4LDQ0NC4wNTQ3LDY3OC4xOTQ4LDQ0MC4wNTQ3IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3NC42OTQ4IiB4Mj0iNjgwLjE5NDgiIHkxPSI0NDAuMDU0NyIgeTI9IjQ0MC4wNTQ3Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMjM2LjE1ODIiIHg9IjI4MS42OTQ4IiB5PSI0MzQuOTg4OCI+U3VibWl0IGNyZWRlbnRpYWwgZm9yIGF1dGhlbnRpY2F0aW9uPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJpYW0yIiBkYXRhLXBhcnRpY2lwYW50LTI9ImFnZW50Ij48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjI4NS42OTQ4LDQ2NS4xODc1LDI3NS42OTQ4LDQ2OS4xODc1LDI4NS42OTQ4LDQ3My4xODc1LDI4MS42OTQ4LDQ2OS4xODc1IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjI3OS42OTQ4IiB4Mj0iNjg1LjE5NDgiIHkxPSI0NjkuMTg3NSIgeTI9IjQ2OS4xODc1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzI0LjE4NzUiIHg9IjI5MS42OTQ4IiB5PSI0NjQuMTIxNiI+UmV0dXJuIFNpZ25lZCBTQU1MIFJlc3BvbnNlIGFuZCBSZWRpcmVjdCB0byBTUDwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0iYWdlbnQiIGRhdGEtcGFydGljaXBhbnQtMj0ic3AiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNTE2LjI1MTUsNDk0LjMyMDMsNTI2LjI1MTUsNDk4LjMyMDMsNTE2LjI1MTUsNTAyLjMyMDMsNTIwLjI1MTUsNDk4LjMyMDMiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMjc0LjY5NDgiIHgyPSI1MjIuMjUxNSIgeTE9IjQ5OC4zMjAzIiB5Mj0iNDk4LjMyMDMiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI5Ni45NTQxIiB4PSIyODEuNjk0OCIgeT0iNDkzLjI1NDQiPmZvbGxvdyBSZWRpcmVjdDwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0ic3AiIGRhdGEtcGFydGljaXBhbnQtMj0ic3AiPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI1MjguMjUxNSIgeDI9IjU3MC4yNTE1IiB5MT0iNTI3LjQ1MzEiIHkyPSI1MjcuNDUzMSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI1NzAuMjUxNSIgeDI9IjU3MC4yNTE1IiB5MT0iNTI3LjQ1MzEiIHkyPSI1NDAuNDUzMSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI1MjkuMjUxNSIgeDI9IjU3MC4yNTE1IiB5MT0iNTQwLjQ1MzEiIHkyPSI1NDAuNDUzMSIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNTM5LjI1MTUsNTM2LjQ1MzEsNTI5LjI1MTUsNTQwLjQ1MzEsNTM5LjI1MTUsNTQ0LjQ1MzEsNTM1LjI1MTUsNTQwLjQ1MzEiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjQuOTg1NCIgeD0iNTM1LjI1MTUiIHk9IjUyMi4zODcyIj5WYWxpZGF0ZSBBc3NlcnRpb25zPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJzcCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJhZ2VudCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIyODUuNjk0OCw1NjUuNTg1OSwyNzUuNjk0OCw1NjkuNTg1OSwyODUuNjk0OCw1NzMuNTg1OSwyODEuNjk0OCw1NjkuNTg1OSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIyNzkuNjk0OCIgeDI9IjUyNy4yNTE1IiB5MT0iNTY5LjU4NTkiIHkyPSI1NjkuNTg1OSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjIyOS41NTY2IiB4PSIyOTEuNjk0OCIgeT0iNTY0LjUyIj5BdXRob3JpemUgVXNlciBhbmQgUHJvdmlkZSBTZXJ2aWNlPC90ZXh0PjwvZz48IS0tU1JDPVtUTDlEUnk4bTNCdHRMclhtT0dTa0V3ODlnVEZHWDBISUhWVG5zSU1xZmJXQklQUXVlRXROcG1jcWI0Y3hEVlB4VmR4RlBNQURLMVFtRENJYTY2aWV5X0tBTGhPWDBvVllGSXBwRFBKVldWNkdQUWZZd3M2cUMzTXkxbEdaSzA1US1IWGhRbFJTVTRJSkVVTVBBZEJBQzhtWTJsODYzS19XcVRrSkZFeUlJeU5RbHhIdHQ0QmtkQVBBQ0xhM2F4OHVxdThSRXRrZ3FNenJZeFVTd3Z1bU1KdlR5QUdFenNGaGJNYW1vLUFjcXRiSWRZcUZDYnRTd2NJS0JWb0hwMTlpRVd6a2ppNlFGNU9TS0dENHQyYUJoWGxPZXdCYlpYdGJQcy1ha2VJTHhYRlV1NVVCV1JDOHdPMUFLb3F0VzQyREtUbndfMzFBZVhPbzFOWm5oUFlocHdDVmZlYW5ORXRpbjRkeEhsdFBmZ3VhU2E0S0ZVOG85MC1WaTlFcExYdmhnUEJJdUlRZ1hNNnl4R3hkYi10c0czbmVmcmNndk5yeU5pOHljLW8yNGNTNklsNXVwSTh1UW05MlQzbHFMMVEzRS1vaXJsUkt6ckZzS2t2Sm91Q2k3VUwyUHEtd2tJbllGVnJXa2FpSUFCbXpLWXJfRlZlWkxWV0JdLS0+PC9nPjwvc3ZnPg=='>
+
+<img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U3R5bGVUeXBlPSJ0ZXh0L2NzcyIgZGF0YS1kaWFncmFtLXR5cGU9IlNFUVVFTkNFIiBoZWlnaHQ9IjU3OXB4IiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBzdHlsZT0id2lkdGg6ODk4cHg7aGVpZ2h0OjU3OXB4O2JhY2tncm91bmQ6I0ZGRkZGRjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDg5OCA1NzkiIHdpZHRoPSI4OThweCIgem9vbUFuZFBhbj0ibWFnbmlmeSI+PHRpdGxlPlNQIEluaXRpYXRlZCBTQU1MIExvZ291dCB3aXRoIElBTSBTeXN0ZW08L3RpdGxlPjxkZWZzLz48Zz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMzM4LjAwMjkiIHg9IjI3OS41NCIgeT0iMjcuOTk1MSI+U1AgSW5pdGlhdGVkIFNBTUwgTG9nb3V0IHdpdGggSUFNIFN5c3RlbTwvdGV4dD48Zz48dGl0bGU+RW5kIFVzZXI8L3RpdGxlPjxyZWN0IGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMDAwMCIgaGVpZ2h0PSIzODAuNTkzOCIgd2lkdGg9IjgiIHg9IjM1LjQ4MjkiIHk9IjExOC41OTM4Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLWRhc2hhcnJheTo1LjAsNS4wOyIgeDE9IjM5IiB4Mj0iMzkiIHkxPSIxMTguNTkzOCIgeTI9IjQ5OS4xODc1Ii8+PC9nPjxnPjx0aXRsZT5Vc2VyIEFnZW50KCBCcm93c2VyKTwvdGl0bGU+PHJlY3QgZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjAwMDAwIiBoZWlnaHQ9IjM4MC41OTM4IiB3aWR0aD0iOCIgeD0iMzA0LjI0MjIiIHk9IjExOC41OTM4Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLWRhc2hhcnJheTo1LjAsNS4wOyIgeDE9IjMwOC4xMzU3IiB4Mj0iMzA4LjEzNTciIHkxPSIxMTguNTkzOCIgeTI9IjQ5OS4xODc1Ii8+PC9nPjxnPjx0aXRsZT5XZWIgQXBwbGljYXRpb24gKFNQKTwvdGl0bGU+PHJlY3QgZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjAwMDAwIiBoZWlnaHQ9IjM4MC41OTM4IiB3aWR0aD0iOCIgeD0iNTg3Ljg5OTQiIHk9IjExOC41OTM4Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7c3Ryb2tlLWRhc2hhcnJheTo1LjAsNS4wOyIgeDE9IjU5MS41Mzk2IiB4Mj0iNTkxLjUzOTYiIHkxPSIxMTguNTkzOCIgeTI9IjQ5OS4xODc1Ii8+PC9nPjxnPjx0aXRsZT5JQU0gU3lzdGVtIChJRFApPC90aXRsZT48cmVjdCBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDAwMDAiIGhlaWdodD0iMzgwLjU5MzgiIHdpZHRoPSI4IiB4PSI3NDUuODQyOCIgeT0iMTE4LjU5MzgiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTtzdHJva2UtZGFzaGFycmF5OjUuMCw1LjA7IiB4MT0iNzQ5LjI1OTMiIHgyPSI3NDkuMjU5MyIgeTE9IjExOC41OTM4IiB5Mj0iNDk5LjE4NzUiLz48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LWhlYWQiIGRhdGEtcGFydGljaXBhbnQ9InVzZXIiPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjYyLjk2NTgiIHg9IjUiIHk9IjExNS4yOTIiPkVuZCBVc2VyPC90ZXh0PjxlbGxpcHNlIGN4PSIzOS40ODI5IiBjeT0iNTAuNzk2OSIgZmlsbD0iIzkwRUU5MCIgcng9IjgiIHJ5PSI4IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiLz48cGF0aCBkPSJNMzkuNDgyOSw1OC43OTY5IEwzOS40ODI5LDg1Ljc5NjkgTTI2LjQ4MjksNjYuNzk2OSBMNTIuNDgyOSw2Ni43OTY5IE0zOS40ODI5LDg1Ljc5NjkgTDI2LjQ4MjksMTAwLjc5NjkgTTM5LjQ4MjksODUuNzk2OSBMNTIuNDgyOSwxMDAuNzk2OSIgZmlsbD0ibm9uZSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PC9nPjxnIGNsYXNzPSJwYXJ0aWNpcGFudCBwYXJ0aWNpcGFudC10YWlsIiBkYXRhLXBhcnRpY2lwYW50PSJ1c2VyIj48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI2Mi45NjU4IiB4PSI1IiB5PSI1MTEuMTgyNiI+RW5kIFVzZXI8L3RleHQ+PGVsbGlwc2UgY3g9IjM5LjQ4MjkiIGN5PSI1MjIuOTg0NCIgZmlsbD0iIzkwRUU5MCIgcng9IjgiIHJ5PSI4IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiLz48cGF0aCBkPSJNMzkuNDgyOSw1MzAuOTg0NCBMMzkuNDgyOSw1NTcuOTg0NCBNMjYuNDgyOSw1MzguOTg0NCBMNTIuNDgyOSw1MzguOTg0NCBNMzkuNDgyOSw1NTcuOTg0NCBMMjYuNDgyOSw1NzIuOTg0NCBNMzkuNDgyOSw1NTcuOTg0NCBMNTIuNDgyOSw1NzIuOTg0NCIgZmlsbD0ibm9uZSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7Ii8+PC9nPjxnIGNsYXNzPSJwYXJ0aWNpcGFudCBwYXJ0aWNpcGFudC1oZWFkIiBkYXRhLXBhcnRpY2lwYW50PSJhZ2VudCI+PHJlY3QgZmlsbD0iIzkwRUU5MCIgaGVpZ2h0PSIzMC4yOTY5IiByeD0iMi41IiByeT0iMi41IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjAuNTsiIHdpZHRoPSIxNjQuMjEyOSIgeD0iMjI2LjEzNTciIHk9Ijg3LjI5NjkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNTAuMjEyOSIgeD0iMjMzLjEzNTciIHk9IjEwNy4yOTIiPlVzZXIgQWdlbnQoIEJyb3dzZXIpPC90ZXh0PjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtdGFpbCIgZGF0YS1wYXJ0aWNpcGFudD0iYWdlbnQiPjxyZWN0IGZpbGw9IiM5MEVFOTAiIGhlaWdodD0iMzAuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMTY0LjIxMjkiIHg9IjIyNi4xMzU3IiB5PSI0OTguMTg3NSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE1MC4yMTI5IiB4PSIyMzMuMTM1NyIgeT0iNTE4LjE4MjYiPlVzZXIgQWdlbnQoIEJyb3dzZXIpPC90ZXh0PjwvZz48ZyBjbGFzcz0icGFydGljaXBhbnQgcGFydGljaXBhbnQtaGVhZCIgZGF0YS1wYXJ0aWNpcGFudD0ic3AiPjxyZWN0IGZpbGw9IiNCMEUwRTYiIGhlaWdodD0iMzAuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMTYwLjcxOTciIHg9IjUxMS41Mzk2IiB5PSI4Ny4yOTY5Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTQ2LjcxOTciIHg9IjUxOC41Mzk2IiB5PSIxMDcuMjkyIj5XZWIgQXBwbGljYXRpb24gKFNQKTwvdGV4dD48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LXRhaWwiIGRhdGEtcGFydGljaXBhbnQ9InNwIj48cmVjdCBmaWxsPSIjQjBFMEU2IiBoZWlnaHQ9IjMwLjI5NjkiIHJ4PSIyLjUiIHJ5PSIyLjUiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MC41OyIgd2lkdGg9IjE2MC43MTk3IiB4PSI1MTEuNTM5NiIgeT0iNDk4LjE4NzUiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxNDYuNzE5NyIgeD0iNTE4LjUzOTYiIHk9IjUxOC4xODI2Ij5XZWIgQXBwbGljYXRpb24gKFNQKTwvdGV4dD48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LWhlYWQiIGRhdGEtcGFydGljaXBhbnQ9ImlhbTIiPjxyZWN0IGZpbGw9IiNGRkE1MDAiIGhlaWdodD0iMzAuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMTM1LjE2NyIgeD0iNjgyLjI1OTMiIHk9Ijg3LjI5NjkiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjEuMTY3IiB4PSI2ODkuMjU5MyIgeT0iMTA3LjI5MiI+SUFNIFN5c3RlbSAoSURQKTwvdGV4dD48L2c+PGcgY2xhc3M9InBhcnRpY2lwYW50IHBhcnRpY2lwYW50LXRhaWwiIGRhdGEtcGFydGljaXBhbnQ9ImlhbTIiPjxyZWN0IGZpbGw9IiNGRkE1MDAiIGhlaWdodD0iMzAuMjk2OSIgcng9IjIuNSIgcnk9IjIuNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDowLjU7IiB3aWR0aD0iMTM1LjE2NyIgeD0iNjgyLjI1OTMiIHk9IjQ5OC4xODc1Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTIxLjE2NyIgeD0iNjg5LjI1OTMiIHk9IjUxOC4xODI2Ij5JQU0gU3lzdGVtIChJRFApPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJ1c2VyIiBkYXRhLXBhcnRpY2lwYW50LTI9ImFnZW50Ij48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjI5Ni4yNDIyLDE0NS43MjY2LDMwNi4yNDIyLDE0OS43MjY2LDI5Ni4yNDIyLDE1My43MjY2LDMwMC4yNDIyLDE0OS43MjY2IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9IjM5LjQ4MjkiIHgyPSIzMDIuMjQyMiIgeTE9IjE0OS43MjY2IiB5Mj0iMTQ5LjcyNjYiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNDQuNzU5MyIgeD0iNDYuNDgyOSIgeT0iMTQ0LjY2MDYiPkluaXRpYXRlIExvZ291dCB0byB0aGUgd2ViIEFwcGxpY2F0aW9uPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJhZ2VudCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJzcCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI1NzkuODk5NCwxNzQuODU5NCw1ODkuODk5NCwxNzguODU5NCw1NzkuODk5NCwxODIuODU5NCw1ODMuODk5NCwxNzguODU5NCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIzMDguMjQyMiIgeDI9IjU4NS44OTk0IiB5MT0iMTc4Ljg1OTQiIHkyPSIxNzguODU5NCIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjE3NC42Njg1IiB4PSIzMTUuMjQyMiIgeT0iMTczLjc5MzUiPlJlZGlyZWN0IHRvIEFwcGxpY2F0aW9uKFNQKTwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0ic3AiIGRhdGEtcGFydGljaXBhbnQtMj0iYWdlbnQiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iMzE5LjI0MjIsMjAzLjk5MjIsMzA5LjI0MjIsMjA3Ljk5MjIsMzE5LjI0MjIsMjExLjk5MjIsMzE1LjI0MjIsMjA3Ljk5MjIiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMzEzLjI0MjIiIHgyPSI1OTAuODk5NCIgeTE9IjIwNy45OTIyIiB5Mj0iMjA3Ljk5MjIiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI4OC4yNDUxIiB4PSIzMjUuMjQyMiIgeT0iMjAyLjkyNjMiPlJlZGlyZWN0IFVzZXI8L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9ImFnZW50IiBkYXRhLXBhcnRpY2lwYW50LTI9ImlhbTIiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNzM3Ljg0MjgsMjMzLjEyNSw3NDcuODQyOCwyMzcuMTI1LDczNy44NDI4LDI0MS4xMjUsNzQxLjg0MjgsMjM3LjEyNSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIzMDguMjQyMiIgeDI9Ijc0My44NDI4IiB5MT0iMjM3LjEyNSIgeTI9IjIzNy4xMjUiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNDQuNjY0MSIgeD0iMzE1LjI0MjIiIHk9IjIzMi4wNTkxIj5WaWEgU1AgSW5pdGFsdGVkIFNBTUwgTG9nb3V0IFJlcXVlc3Q8L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9ImlhbTIiIGRhdGEtcGFydGljaXBhbnQtMj0iaWFtMiI+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9Ijc0OS44NDI4IiB4Mj0iNzkxLjg0MjgiIHkxPSIyOTYuNTIzNCIgeTI9IjI5Ni41MjM0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9Ijc5MS44NDI4IiB4Mj0iNzkxLjg0MjgiIHkxPSIyOTYuNTIzNCIgeTI9IjMwOS41MjM0Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIgeDE9Ijc1MC44NDI4IiB4Mj0iNzkxLjg0MjgiIHkxPSIzMDkuNTIzNCIgeTI9IjMwOS41MjM0Ii8+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI3NjAuODQyOCwzMDUuNTIzNCw3NTAuODQyOCwzMDkuNTIzNCw3NjAuODQyOCwzMTMuNTIzNCw3NTYuODQyOCwzMDkuNTIzNCIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExOS4wNTAzIiB4PSI3NTYuODQyOCIgeT0iMjYxLjE5MTkiPlZhbGlkYXRlIHNpZ25hdHVyZTwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMTIuOTc1NiIgeD0iNzU2Ljg0MjgiIHk9IjI3Ni4zMjQ3Ij5hbmQgU1AgaXMgVHJ1c3RlZDwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMjguMjY3MSIgeD0iNzU2Ljg0MjgiIHk9IjI5MS40NTc1Ij5hbmQgc2Vzc2lvbiBleGlzdGVkPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJpYW0yIiBkYXRhLXBhcnRpY2lwYW50LTI9ImlhbTIiPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI3NDkuODQyOCIgeDI9Ijc5MS44NDI4IiB5MT0iMzM4LjY1NjMiIHkyPSIzMzguNjU2MyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI3OTEuODQyOCIgeDI9Ijc5MS44NDI4IiB5MT0iMzM4LjY1NjMiIHkyPSIzNTEuNjU2MyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSI3NTAuODQyOCIgeDI9Ijc5MS44NDI4IiB5MT0iMzUxLjY1NjMiIHkyPSIzNTEuNjU2MyIvPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iNzYwLjg0MjgsMzQ3LjY1NjMsNzUwLjg0MjgsMzUxLjY1NjMsNzYwLjg0MjgsMzU1LjY1NjMsNzU2Ljg0MjgsMzUxLjY1NjMiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMzQuMjQwMiIgeD0iNzU2Ljg0MjgiIHk9IjMzMy41OTAzIj5EaXNhYmxlIFVzZXIgc2Vzc2lvbjwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0iaWFtMiIgZGF0YS1wYXJ0aWNpcGFudC0yPSJhZ2VudCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSIzMTkuMjQyMiwzNzYuNzg5MSwzMDkuMjQyMiwzODAuNzg5MSwzMTkuMjQyMiwzODQuNzg5MSwzMTUuMjQyMiwzODAuNzg5MSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIzMTMuMjQyMiIgeDI9Ijc0OC44NDI4IiB5MT0iMzgwLjc4OTEiIHkyPSIzODAuNzg5MSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM3My4wNTgxIiB4PSIzMjUuMjQyMiIgeT0iMzc1LjcyMzEiPlJldHVybiBTaWduZWQgTG9nb3V0IFNBTUwgUmVzcG9uc2UgYW5kIFJlZGlyZWN0IHRvIFNQPC90ZXh0PjwvZz48ZyBjbGFzcz0ibWVzc2FnZSIgZGF0YS1wYXJ0aWNpcGFudC0xPSJhZ2VudCIgZGF0YS1wYXJ0aWNpcGFudC0yPSJzcCI+PHBvbHlnb24gZmlsbD0iIzE4MTgxOCIgcG9pbnRzPSI1NzkuODk5NCw0MDUuOTIxOSw1ODkuODk5NCw0MDkuOTIxOSw1NzkuODk5NCw0MTMuOTIxOSw1ODMuODk5NCw0MDkuOTIxOSIgc3R5bGU9InN0cm9rZTojMTgxODE4O3N0cm9rZS13aWR0aDoxOyIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiIHgxPSIzMDguMjQyMiIgeDI9IjU4NS44OTk0IiB5MT0iNDA5LjkyMTkiIHkyPSI0MDkuOTIxOSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9Ijk2Ljk1NDEiIHg9IjMxNS4yNDIyIiB5PSI0MDQuODU2Ij5mb2xsb3cgUmVkaXJlY3Q8L3RleHQ+PC9nPjxnIGNsYXNzPSJtZXNzYWdlIiBkYXRhLXBhcnRpY2lwYW50LTE9InNwIiBkYXRhLXBhcnRpY2lwYW50LTI9InNwIj48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTkxLjg5OTQiIHgyPSI2MzMuODk5NCIgeTE9IjQzOS4wNTQ3IiB5Mj0iNDM5LjA1NDciLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNjMzLjg5OTQiIHgyPSI2MzMuODk5NCIgeTE9IjQzOS4wNTQ3IiB5Mj0iNDUyLjA1NDciLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iNTkyLjg5OTQiIHgyPSI2MzMuODk5NCIgeTE9IjQ1Mi4wNTQ3IiB5Mj0iNDUyLjA1NDciLz48cG9seWdvbiBmaWxsPSIjMTgxODE4IiBwb2ludHM9IjYwMi44OTk0LDQ0OC4wNTQ3LDU5Mi44OTk0LDQ1Mi4wNTQ3LDYwMi44OTk0LDQ1Ni4wNTQ3LDU5OC44OTk0LDQ1Mi4wNTQ3IiBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTI0Ljk4NTQiIHg9IjU5OC44OTk0IiB5PSI0MzMuOTg4OCI+VmFsaWRhdGUgQXNzZXJ0aW9uczwvdGV4dD48L2c+PGcgY2xhc3M9Im1lc3NhZ2UiIGRhdGEtcGFydGljaXBhbnQtMT0ic3AiIGRhdGEtcGFydGljaXBhbnQtMj0iYWdlbnQiPjxwb2x5Z29uIGZpbGw9IiMxODE4MTgiIHBvaW50cz0iMzE5LjI0MjIsNDc3LjE4NzUsMzA5LjI0MjIsNDgxLjE4NzUsMzE5LjI0MjIsNDg1LjE4NzUsMzE1LjI0MjIsNDgxLjE4NzUiIHN0eWxlPSJzdHJva2U6IzE4MTgxODtzdHJva2Utd2lkdGg6MTsiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMxODE4MTg7c3Ryb2tlLXdpZHRoOjE7IiB4MT0iMzEzLjI0MjIiIHgyPSI1OTAuODk5NCIgeTE9IjQ4MS4xODc1IiB5Mj0iNDgxLjE4NzUiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNTkuNjU3MiIgeD0iMzI1LjI0MjIiIHk9IjQ3Ni4xMjE2Ij5Mb3V0Z291dCB1c2VyIGFuZCBzaG93IExvZ291dCBjb250ZW50PC90ZXh0PjwvZz48IS0tU1JDPVtUTDR4Unk4bTREeHBBcXdtcTg2Yjh3Z0dLajQxMklINC1iWXdjRUlRZDZIaXJ0VEhzZHpWc3lHcUxFZ01kQl9OVklTYTZnNHdtRFFHYTE5aWUyaHRFelpQcmxPMjBxYTdzdDhGckpTQmRlajJyTTh6cDl2QzBvLUNWV1FBZUd5VlNxcmo5d3I3RDhMSk5nV2NmdXAwQkFBV1JENzgwWHd6N1NCbE5NQWZFRmtOemVPZEE5dEpMMmlYUXMxSDdJdXFUZERkWG1SeklWVHVvX2REMk9salBpSUpFal9GaExVY25RQThJUFZodkJwQTItVExuTzlxMkNFalNQNzBvcE14ckg0UnliV2R2MEdIYW5OaWlrbUw1SFZGeDFYWXpLZWc1d3RxdHdBRi1EYVpJbjZINlF5cURKNFdLc2tLejF4VlpHZ3oxbXJZVUZQenNCSXZaMVlQT3FsdUhONHVMVGFHZ3JDdVNSZjNuZXMwZDNYZTZ3WTJJbVdydmFkUFppWkU2YVE4N2pGcmd5RWFibS1oakhza3h3Y0JDQng2QnBiT253UnVHZGZPWGpUVEM0YjZ5SUg5ZHhpV0NoaE5yYVgwX1cwMF0tLT48L2c+PC9zdmc+'>
+
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>为了便于验证 SAML 协议，我们将使用 Docker 来搭建环境，keycloak的作为IDP，WordPress作为SP，用来演示SAML登陆流程。在生产环境下，应该根据实际情况配置和准备环境。</p>
+<h3 id="准备Docker镜像"><a href="#准备Docker镜像" class="headerlink" title="准备Docker镜像"></a>准备Docker镜像</h3><p>准备docker-compose，并创建sp和idp需要的相关文件。</p>
+<ul>
+<li><p>参考<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">https://docs.docker.com/compose/install/</a> 安装你的docker-compose环境,安装完成后使用<code>docker-compose -v</code>检查docker-compose是否安装成功</p>
+   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker-compose -v</span><br><span class="line">docker-compose version 1.29.2, build unknown</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个demoiam文件夹,按照下面结构创建文件，也可以直接从 <a target="_blank" rel="noopener" href="https://github.com/lich-wang/demoiam">https://github.com/lich-wang/demoiam</a> 获取配置好的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ tree ~/demoiam/</span><br><span class="line">  demoiam/</span><br><span class="line">  ├── testidp</span><br><span class="line">  │   └── docker-compose.yml</span><br><span class="line">  └── testsp</span><br><span class="line">      └── docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置testidp&#x2F;docker-compose.yml 如下</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">keycloak:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">keycloak/keycloak</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;20000:8080&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">KEYCLOAK_ADMIN:</span> <span class="string">admin</span></span><br><span class="line">    <span class="attr">KEYCLOAK_ADMIN_PASSWORD:</span> <span class="string">admin</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">start-dev</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">keycloak_data:/opt/jboss/keycloak/standalone/data</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line"><span class="attr">keycloak_data:</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置testspdocker-compose.yml 如下</li>
+</ul>
+ <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">wordpress:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">wordpress</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">20001</span><span class="string">:80</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">WORDPRESS_DB_HOST:</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">WORDPRESS_DB_USER:</span> <span class="string">exampleuser</span></span><br><span class="line">    <span class="attr">WORDPRESS_DB_PASSWORD:</span> <span class="string">examplepass</span></span><br><span class="line">    <span class="attr">WORDPRESS_DB_NAME:</span> <span class="string">exampledb</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">wordpress:/var/www/html</span></span><br><span class="line"></span><br><span class="line"><span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mysql:8.0</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">MYSQL_DATABASE:</span> <span class="string">exampledb</span></span><br><span class="line">    <span class="attr">MYSQL_USER:</span> <span class="string">exampleuser</span></span><br><span class="line">    <span class="attr">MYSQL_PASSWORD:</span> <span class="string">examplepass</span></span><br><span class="line">    <span class="attr">MYSQL_RANDOM_ROOT_PASSWORD:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">db:/var/lib/mysql</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line"><span class="attr">wordpress:</span></span><br><span class="line"><span class="attr">db:</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="初始化IDP"><a href="#初始化IDP" class="headerlink" title="初始化IDP"></a>初始化IDP</h3><ul>
+<li><p>进入IDP路径，启动环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/demoiam/testidp/</span><br><span class="line">$ sudo docker-compose up -d</span><br><span class="line">Creating network <span class="string">&quot;testidp_default&quot;</span> with the default driver</span><br><span class="line">Creating volume <span class="string">&quot;testidp_keycloak_data&quot;</span> with default driver</span><br><span class="line">Creating testidp_keycloak_1 ... <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入控制台，创建一个新用户</p>
+<ul>
+<li>打开 <a target="_blank" rel="noopener" href="http://localhost:20000/">http://localhost:20000/</a> 输入 用户名<code>admin</code>密码<code>admin</code>，进入控制台<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-1.png" alt="login"></li>
+<li>从左侧导航进入<code>Users</code>页面，点击<code>Add User</code>创建一个新用户<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-2.png" alt="add user"><ul>
+<li>在<code>Username</code>后输入用户名<code>test1</code>，点击<code>Create</code>创建用户<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-3.png" alt="creat user"></li>
+<li>创建成功后，点击<code>test1</code>用户的<code>credentials</code>标签，点击<code>Set Password</code> 为用户创建密码<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-4.png" alt="set password"></li>
+<li>在<code>Password</code>和<code>Password confirmation</code>分别输入<code>test1</code>作为密码,然后点击<code>Save</code>为用户保存密码<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-5.png" alt="finish passwrod"><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-6.png" alt="finish passwrod"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>导出IDP的SAML元数据<br>在左侧导航栏点击<code>Realm Settings</code>下划到最后,右键点击<code>SAML 2.0 Identity Provider Metadata</code>另存链接为IDP.xml<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-7.png" alt="export idp xml"></p>
+</li>
+</ul>
+<h3 id="初始化SP"><a href="#初始化SP" class="headerlink" title="初始化SP"></a>初始化SP</h3><ul>
+<li><p>进入IDP路径，启动环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/demoiam/testsp/</span><br><span class="line">$ sudo docker-compose up -d</span><br><span class="line">Creating network <span class="string">&quot;testsp_default&quot;</span> with the default driver</span><br><span class="line">Creating volume <span class="string">&quot;testsp_wordpress&quot;</span> with default driver</span><br><span class="line">Creating volume <span class="string">&quot;testsp_db&quot;</span> with default driver</span><br><span class="line">Creating testsp_db_1        ... <span class="keyword">done</span></span><br><span class="line">Creating testsp_wordpress_1 ... <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>完成SP 初始化，并启用SAML集成</p>
+<ul>
+<li>打开 <a target="_blank" rel="noopener" href="http://localhost:20001/">http://localhost:20001/</a> 选择语言<code>简体中文</code>后,点击&#96;&#96;&#96;继续&#96;&#96;完成配置<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-8.png" alt="inital sp"></li>
+<li>设置用户名<code>admin</code>密码<code>w0rd@Press</code>邮箱<code>admin@admin.com</code>后，点击<code>安装WordPress</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-9.png" alt="inital sp"></li>
+<li>点击登陆，在登陆页面输入刚才设置的用户名<code>admin</code>密码<code>w0rd@Press</code>后，点击<code>登陆</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-10.png" alt="login sp"><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-11.png" alt="login sp"></li>
+<li>登陆后,添加SAML插件启用SAML登陆<ul>
+<li>点击左侧导航页<code>插件</code>下的<code>添加插件</code>，在右侧搜索输入<code>SAML</code>选择<code>SAML Single Sign On – SSO Login</code>安装，并<code>启用</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-12.png" alt="enable saml"><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-13.png" alt="enable saml"></li>
+<li>刷新页面页面后,在左侧导航栏新出现的<code>SAML Single Sign On – SSO Login</code>下点击<code>Service Provider Metadata</code>页签<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-14.png" alt="export sp xml"></li>
+<li>点击<code>Metadata XML File</code> 下的<code>DownLoad</code>下载SP元数据，并将下载后的文件修改为<code>sp.xml</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="配置SAML元数据"><a href="#配置SAML元数据" class="headerlink" title="配置SAML元数据"></a>配置SAML元数据</h3><ul>
+<li>SP 导入IDP元数据<ul>
+<li>打开 <a target="_blank" rel="noopener" href="http://localhost:20001/wp-admin">http://localhost:20001/wp-admin</a> 用之前设置用户名<code>admin</code>密码<code>w0rd@Press</code>登陆<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-15.png" alt="improt idp xml"></li>
+<li>从左侧导航栏的<code>SAML Single Sign On – SSO Login</code>进入<code>Service Provider Setup</code>页签</li>
+<li>在<code>Configure Service Provider</code>下选择<code>Upload IDP Metadata</code><ul>
+<li><code>Identity Provider Name :</code>输入<code>testidp</code></li>
+<li><code>Upload Metadata :</code>选择之前下的<code>idp.xml</code></li>
+<li>点击<code>upload</code>上传<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-16.png" alt="improt idp xml"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IDP导入SP元数据<ul>
+<li>打开 <a target="_blank" rel="noopener" href="http://localhost:20000/">http://localhost:20000/</a> 输入 用户名<code>admin</code>密码<code>admin</code>，进入控制台<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-17.png" alt="import sp xml"></li>
+<li>点击左侧<code>Clients</code>页签，选择<code>Import client</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-18.png" alt="import sp xml"><ul>
+<li>在<code>Resource file</code>右侧点击<code>Browse...</code>选择之前下载的<code>sp.xml</code>,后点击<code>Save</code>。<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-19.png" alt="import sp xml"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="使用SAMLTrace进行调试跟踪"><a href="#使用SAMLTrace进行调试跟踪" class="headerlink" title="使用SAMLTrace进行调试跟踪"></a>使用SAMLTrace进行调试跟踪</h3><p>为方便后续调整，这里举例使用Edge浏览器并安装SAMLTrace扩展，使用隐私模式进行SAML验证</p>
+<ul>
+<li>安装SAMLTrace<ul>
+<li>用Edge浏览器打开 <a target="_blank" rel="noopener" href="https://microsoftedge.microsoft.com/addons">https://microsoftedge.microsoft.com/addons</a></li>
+<li>搜索<code>saml tracer</code>,并安装搜索到的<code>SAML, WS-Federation and OAuth 2.0 tracer</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-20.png" alt="install addon"></li>
+<li>在Edge浏览器打开<a href="edge://extensions/">edge:&#x2F;&#x2F;extensions&#x2F;</a>，选择<code>SAML, WS-Federation and OAuth 2.0 tracer</code>的<code>详细信息</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-22.png" alt="install addon"><br>-勾选 <code>在 InPrivate 中允许</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-21.png" alt="install addon"></li>
+</ul>
+</li>
+<li>使用Edge的隐私模式进行SAML验证<ul>
+<li>在Edge浏览器右侧<code>...</code>设置列表内找到<code>新建Inprivate窗口</code>或者按下快捷键<code>Ctrl+Shift+N</code></li>
+<li>在隐私模式下访问 <a target="_blank" rel="noopener" href="http://localhost:20001/wp-login.php">http://localhost:20001/wp-login.php</a> ，并点击 <code>Login with testdip</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-23.png" alt="test login"><ul>
+<li>页面跳转到 IDP登录页面</li>
+<li>在IDP登录页输入之前配置的用户名<code>test1</code>密码<code>test1</code>并登录<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-24.png" alt="test login"></li>
+<li>在IDP登录重置初始密码为<code>test2</code><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-25.png" alt="test login"></li>
+<li>页面跳回SP，并登录成功<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-26.png" alt="test login"></li>
+</ul>
+</li>
+<li>点击地址栏右侧扩展图标，点击打开<code>SAMLTrace</code>可以查看相关SAML请求<br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-27.png" alt="check log"><br><img src="/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/image-29.png" alt="check log"></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/09/%E5%BE%AE%E4%BF%A1%E5%92%8C%E6%89%8B%E6%9C%BAOTP%E9%9B%86%E6%88%90%E7%99%BB%E5%BD%95/" rel="prev" title="微信和手机OTP集成登录">
+                  <i class="fa fa-angle-left"></i> 微信和手机OTP集成登录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/13/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E7%9A%84%E8%A7%A3%E5%86%B3hexo%E7%B2%98%E8%B4%B4%E5%9B%BE%E7%89%87%E9%97%AE%E9%A2%98/" rel="next" title="如何优雅的解决hexo粘贴图片问题">
+                  如何优雅的解决hexo粘贴图片问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Lich Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"http://blog.lich.tech/2024/05/10/SAML-%E9%9B%86%E6%88%90%E4%BB%8B%E7%BB%8D/"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+</body>
+</html>

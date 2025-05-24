@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D模型 - 飞龙</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .page-content {
+            width: 21cm;
+            height: 29.7cm;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .page-content img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        .product-info {
+            margin-top: 20px;
+        }
+        .product-info p {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .navigation {
+            margin-top: 30px;
+        }
+        .navigation a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+        }
+        @media print {
+            body, .page-content {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                height: 100%;
+                page-break-after: avoid;
+            }
+            .navigation {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <h1>飞龙</h1>
+        <img src="/3d/6-飞龙.jpg" alt="6-飞龙.jpg">
+        <div class="product-info">
+            <p><strong>描述：</strong> 这是一个飞龙3D打印模型。</p>
+            <p><strong>尺寸：</strong> 28x10x10厘米</p>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <a href="/3d/5.html">上一页</a>
+        <a href="/3d/7.html">下一页</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.lich.tech","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="介绍Github PageGithub Page 是GitHub提供的免费的静态网页托管服务, 只要创建一个和自己GitHub用户名相同的Project, 即可在 GitHub用户名.github.io 拥有一个网站, 非常适合用于作为个人博客网站使用. 使用 Github Page 作为个人博客有如下优势    完全免费 依托 Github, 背后有微软投资，跑路风险小 Greek, 或者说逼格">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Github Page, Hexo, Travis CI, VS Cdoe 最佳实践">
+<meta property="og:url" content="http://blog.lich.tech/2024/01/08/hexo%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="命匣隐匿之地">
+<meta property="og:description" content="介绍Github PageGithub Page 是GitHub提供的免费的静态网页托管服务, 只要创建一个和自己GitHub用户名相同的Project, 即可在 GitHub用户名.github.io 拥有一个网站, 非常适合用于作为个人博客网站使用. 使用 Github Page 作为个人博客有如下优势    完全免费 依托 Github, 背后有微软投资，跑路风险小 Greek, 或者说逼格">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-08T12:49:54.000Z">
+<meta property="article:modified_time" content="2025-05-24T23:46:49.235Z">
+<meta property="article:author" content="Lich Wang">
+<meta property="article:tag" content="IaC">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://blog.lich.tech/2024/01/08/hexo%E6%90%AD%E5%BB%BA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://blog.lich.tech/2024/01/08/hexo%E6%90%AD%E5%BB%BA/","path":"2024/01/08/hexo搭建/","title":"Github Page, Hexo, Travis CI, VS Cdoe 最佳实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Github Page, Hexo, Travis CI, VS Cdoe 最佳实践 | 命匣隐匿之地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">命匣隐匿之地</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-links"><a href="/links/" rel="section"><i class="fa fa-sitemap fa-fw"></i>links</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-calendar"><a href="/%E6%97%A5%E5%BF%97/" rel="section"><i class="fa fa-calendar fa-fw"></i>calendar</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Github-Page"><span class="nav-number">1.1.</span> <span class="nav-text">Github Page</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hexo"><span class="nav-number">1.2.</span> <span class="nav-text">Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%82%A3%E4%B9%88%E4%BB%A3%E4%BB%B7%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.</span> <span class="nav-text">那么代价是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">1.4.</span> <span class="nav-text">工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">1.5.</span> <span class="nav-text">准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo-on-Linux"><span class="nav-number">2.</span> <span class="nav-text">Hexo on Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Node-js"><span class="nav-number">2.2.</span> <span class="nav-text">安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85HEXO"><span class="nav-number">2.3.</span> <span class="nav-text">安装HEXO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AENEXT%E4%B8%BB%E9%A2%98"><span class="nav-number">2.4.</span> <span class="nav-text">配置NEXT主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEgit"><span class="nav-number">2.5.</span> <span class="nav-text">安装配置git</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-Page-project"><span class="nav-number">3.</span> <span class="nav-text">GitHub Page project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-source-project"><span class="nav-number">4.</span> <span class="nav-text">GitHub source project</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VS-Code-on-Windows"><span class="nav-number">5.</span> <span class="nav-text">VS Code on Windows</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D-Hexo-on-Linux"><span class="nav-number">6.</span> <span class="nav-text">恢复 Hexo on Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C-1"><span class="nav-number">6.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Node-js-1"><span class="nav-number">6.2.</span> <span class="nav-text">安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git%E5%85%8B%E9%9A%86%E5%BA%94%E7%94%A8%E6%81%A2%E5%A4%8D%E7%8E%AF%E5%A2%83"><span class="nav-number">6.3.</span> <span class="nav-text">git克隆应用恢复环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%88%E6%9D%83GH-TOKEN"><span class="nav-number">6.4.</span> <span class="nav-text">授权GH_TOKEN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%8E%AF%E5%A2%83%E6%81%A2%E5%A4%8DOK"><span class="nav-number">6.4.1.</span> <span class="nav-text">验证环境恢复OK</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D-VS-Code-on-Windows"><span class="nav-number">7.</span> <span class="nav-text">恢复 VS Code on Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85VS-Code"><span class="nav-number">7.1.</span> <span class="nav-text">下载安装VS Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5"><span class="nav-number">7.2.</span> <span class="nav-text">命令行生成密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%EF%BC%8C%E5%B9%B6%E5%A4%8D%E5%88%B6%E5%85%AC%E9%92%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">7.3.</span> <span class="nav-text">查看，并复制公钥信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E5%85%AC%E9%92%A5%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">7.4.</span> <span class="nav-text">添加公钥到远程服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VS-code-%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">7.5.</span> <span class="nav-text">VS code 添加远程服务</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Lich Wang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Lich Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lich-wang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lich-wang" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lich.wang@gmail.com" title="E-Mail → mailto:lich.wang@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.lich.tech/2024/01/08/hexo%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Lich Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Github Page, Hexo, Travis CI, VS Cdoe 最佳实践 | 命匣隐匿之地">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Github Page, Hexo, Travis CI, VS Cdoe 最佳实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-01-08 12:49:54" itemprop="dateCreated datePublished" datetime="2024-01-08T12:49:54+00:00">2024-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-05-24 23:46:49" itemprop="dateModified" datetime="2025-05-24T23:46:49+00:00">2025-05-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="Github-Page"><a href="#Github-Page" class="headerlink" title="Github Page"></a>Github Page</h3><p><a target="_blank" rel="noopener" href="https://pages.github.com/">Github Page</a> 是GitHub提供的免费的静态网页托管服务, 只要创建一个和自己GitHub用户名相同的Project, 即可在 GitHub用户名.github.io 拥有一个网站, 非常适合用于作为个人博客网站使用.</p>
+<p>使用 Github Page 作为个人博客有如下优势  </p>
+<ul>
+<li>完全免费</li>
+<li>依托 Github, 背后有微软投资，跑路风险小</li>
+<li>Greek, 或者说逼格够高</li>
+<li>支持域名绑定</li>
+</ul>
+<h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><p><a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 是一个快速, 简洁且高效的博客框架. Hexo 使用 Markdown（或其他渲染引擎）解析文章, 在几秒内, 即可利用靓丽的主题生成静态网页.</p>
+<p>使用 Hexo 作为 Github Page 博客系统有如下优势</p>
+<ul>
+<li>官方支持 GitHub Page</li>
+<li>有中文文档</li>
+<li>支持 Markdown</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="那么代价是什么"><a href="#那么代价是什么" class="headerlink" title="那么代价是什么"></a>那么代价是什么</h3><p>直接使用 Github Page 和 Hexo 的缺点也很明显</p>
+<ul>
+<li>过于Greek, 直接编辑发帖不方便</li>
+<li>Markdown 编写还是不直观</li>
+<li>Hexo 发布到 Github Page 依然有多个步骤</li>
+</ul>
+<p>为了解决这个问题, 下面是我的最佳实践</p>
+<h3 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h3><pre class="mermaid">flowchart LR
+
+A[VS code] -->|编辑| B[Hexo 源项目]
+B -->|git push| C[Git 源项目]
+C -->|Trave CI| D[Git Page 项目]</pre>
+
+<ul>
+<li>在 VS Code 使用 Remote SSH, Markdown Preview Enchanted, Markdown All in One 远程可视化编辑部署在Linux Service 上的 md 源文件</li>
+<li>完成编辑后使用 VS Code 直接 commit 和 push 文章到GitHub源项目</li>
+<li>Github 上的源项目通过Travel CI 持续集成直接发布到GitHub Page项目</li>
+</ul>
+<p>这样就可以实现所见即所得, 并且不同环境只要打开 VS Code 简单安装三个插件, 少量配置即可保持一致的文章发布体验.并且所有的配置和数据都在服务器. 任何情况都可以轻易恢复环境.</p>
+<p>下面在正式开始环境搭建之前,需要做好如下准备.</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ul>
+<li>github 账号</li>
+<li>自由访问互联网</li>
+<li>一台Linux service<ul>
+<li>最好24小时运行</li>
+<li>实在没有虚拟机也可以</li>
+</ul>
+</li>
+</ul>
+<h2 id="Hexo-on-Linux"><a href="#Hexo-on-Linux" class="headerlink" title="Hexo on Linux"></a>Hexo on Linux</h2><p>Ubuntu 为例</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li>更新系统</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建工作目录，后面所有操作默认在下面的目录执行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> nextblog</span><br><span class="line"><span class="built_in">cd</span> nextblog</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><ul>
+<li>安装npm，依赖的node就自动安装了</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install npm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装后查看版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装HEXO"><a href="#安装HEXO" class="headerlink" title="安装HEXO"></a>安装HEXO</h3><ul>
+<li>完整安装Hexo</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化 Hexo, 注意一定在新目录下.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br><span class="line">npm install </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动Hexo</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置NEXT主题"><a href="#配置NEXT主题" class="headerlink" title="配置NEXT主题"></a>配置NEXT主题</h3><h3 id="安装配置git"><a href="#安装配置git" class="headerlink" title="安装配置git"></a>安装配置git</h3><h2 id="GitHub-Page-project"><a href="#GitHub-Page-project" class="headerlink" title="GitHub Page project"></a>GitHub Page project</h2><h2 id="GitHub-source-project"><a href="#GitHub-source-project" class="headerlink" title="GitHub source project"></a>GitHub source project</h2><h2 id="VS-Code-on-Windows"><a href="#VS-Code-on-Windows" class="headerlink" title="VS Code on Windows"></a>VS Code on Windows</h2><h2 id="恢复-Hexo-on-Linux"><a href="#恢复-Hexo-on-Linux" class="headerlink" title="恢复 Hexo on Linux"></a>恢复 Hexo on Linux</h2><p>Ubuntu 为例</p>
+<h3 id="准备工作-1"><a href="#准备工作-1" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li>更新系统</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Node-js-1"><a href="#安装Node-js-1" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><ul>
+<li>安装npm，依赖的node就自动安装了</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install npm</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装后查看版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="git克隆应用恢复环境"><a href="#git克隆应用恢复环境" class="headerlink" title="git克隆应用恢复环境"></a>git克隆应用恢复环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/lich-wang/nextblog.git</span><br><span class="line"><span class="built_in">cd</span> nextblog</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<h3 id="授权GH-TOKEN"><a href="#授权GH-TOKEN" class="headerlink" title="授权GH_TOKEN"></a>授权GH_TOKEN</h3><p>在 <a target="_blank" rel="noopener" href="https://github.com/settings/tokens">https://github.com/settings/tokens</a> 创建token</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano ./.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>最后一行添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GH_TOKEN=<span class="string">&#x27;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="验证环境恢复OK"><a href="#验证环境恢复OK" class="headerlink" title="验证环境恢复OK"></a>验证环境恢复OK</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/nextblog</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<h2 id="恢复-VS-Code-on-Windows"><a href="#恢复-VS-Code-on-Windows" class="headerlink" title="恢复 VS Code on Windows"></a>恢复 VS Code on Windows</h2><h3 id="下载安装VS-Code"><a href="#下载安装VS-Code" class="headerlink" title="下载安装VS Code"></a>下载安装VS Code</h3><h3 id="命令行生成密钥"><a href="#命令行生成密钥" class="headerlink" title="命令行生成密钥"></a>命令行生成密钥</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-C</span> <span class="string">&quot;lichPC&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出如下，其中“lichPC” 为注释，随便写</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> C:\Users\lich&gt; ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-C</span> <span class="string">&quot;lichPC&quot;</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> which to save the key (C:\Users\lich/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> C:\Users\lich/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> C:\Users\lich/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:HCWn15Tt33hWj6+kfgjptsWS7SpqbUA16c6mfZj7ZKo lichPC</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+---[RSA 3072]----+</span></span><br><span class="line"><span class="string">|        ..o .o   |</span></span><br><span class="line"><span class="string">|        += o. .  |</span></span><br><span class="line"><span class="string">|       oo.. ..   |</span></span><br><span class="line"><span class="string">|      ...o    . .|</span></span><br><span class="line"><span class="string">|     . oS  .   ++|</span></span><br><span class="line"><span class="string">|      . + o+  o *|</span></span><br><span class="line"><span class="string">|       * +=.+..+ |</span></span><br><span class="line"><span class="string">|      o B+++.o. .|</span></span><br><span class="line"><span class="string">|     .E+o*+++... |</span></span><br><span class="line"><span class="string">+----[SHA256]-----+</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看，并复制公钥信息"><a href="#查看，并复制公钥信息" class="headerlink" title="查看，并复制公钥信息"></a>查看，并复制公钥信息</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~\.ssh\id_rsa.pub</span><br></pre></td></tr></table></figure>
+
+<p>复制输出的内容</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> C:\Users\lich\.ssh&gt; <span class="built_in">cat</span> ~\.ssh\id_rsa.pub</span><br><span class="line">ssh<span class="literal">-rsa</span> AAAAB3NzaC1yc2EAAAADAQABAAABgQDIlqewgvVeHx8b0+KrO7ucL2ynXNrIEq+isG07rYR2rf4HYSbaDxWk9ZspGSp4zxzc1OZ+nraofeRnlCX2ijMc0RfUE9nf9qPq7/J08SbQ96dz/pbKb2h5MHKk3UIfq0+<span class="number">40</span>ZOoPpGqVZ0/qJdthBM9DdwB4V/xjJlKZojgLJzy3XheGYjGSfoTJjHK9HfvRxFrJXnLG9Lh0tYRZ/KE6ox129KaSSabQswTRpArzkKe88WaBWu6rV31+FDRirJxXZZ6pN0IS4mXTRViNhMc4KXk3fO5LxDHRCX9tCzr+FLBpDrhr6+aK7zU6Ur6i7wXNzNIoBXnhldZyHUuCBARG5wN4g5AjrUzQPZF3hFyZzRDR9ZLCxK0mWN4VchBDqgx9ST38NibyKFnMjerPVPyng9MvKllkqUUqulwTatElH+IfwFocn31O+vIP7et0Eii3PtJWFDXDQTl7FLOEFO8qDHpm04+b3bRq1GlGJIKcu+JJXIX67fQKQzzcmQ9C2f22f8= lichPC</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加公钥到远程服务器"><a href="#添加公钥到远程服务器" class="headerlink" title="添加公钥到远程服务器"></a>添加公钥到远程服务器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>粘贴公钥信息到最后一行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO9INiHnEXicATPWzDpADnw3edvp+iEKhkopHaRpyTk8 lich.wang@gmail.com</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDiwY8yydjvuLfY78zxvPMoQyJQOwjnskOTH+Hbs7PTL8J+niZT7FSChTdNdBwVqA9EqAhht0/Adu+8LnbZIa78nk9qmfVEMyVmBhnaY1VlAb6nfNQ2PA3+YYZlhmn5j3Jc/WE2v7emUCxMhht+Ic4yZI5I34VLwKWrpzyhUmfRq0siifuIS0G9soIOb37dPyWBMqKutwXZ240KIz7VGGpRgIzEY4Wtelar4UqF8Whkl65RptWR325WeXRMQyW9gm5CayorYs9WDtHFOtDi4zwy6ioqy/cyypoGy8uXmMxU2DRMs+fEGvX4P4bPBGo+twvq0IagKmOzzPvQzUaXeDtBdS0tzGJC0FJxC7f5tRsWC+6Q7MnmVOPcmV74e9OgN5cNUcQnN8dk2zXm8NR4G54s3TM8wdtyBJolS3Zxhj3Bh0vJxyQSkMJoax6Bnccg9F+Br9x6cJJdrhy7rZfR4E8IfiQpqAsGI8u80c4j6K3fcWWCquW1/hO0GaQdoHt9uks= lich@DESKTOP-54AOQFI</span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIlqewgvVeHx8b0+KrO7ucL2ynXNrIEq+isG07rYR2rf4HYSbaDxWk9ZspGSp4zxzc1OZ+nraofeRnlCX2ijMc0RfUE9nf9qPq7/J08SbQ96dz/pbKb2h5MHKk3UIfq0+40ZOoPpGqVZ0/qJdthBM9DdwB4V/xjJlKZojgLJzy3XheGYjGSfoTJjHK9HfvRxFrJXnLG9Lh0tYRZ/KE6ox129KaSSabQswTRpArzkKe88WaBWu6rV31+FDRirJxXZZ6pN0IS4mXTRViNhMc4KXk3fO5LxDHRCX9tCzr+FLBpDrhr6+aK7zU6Ur6i7wXNzNIoBXnhldZyHUuCBARG5wN4g5AjrUzQPZF3hFyZzRDR9ZLCxK0mWN4VchBDqgx9ST38NibyKFnMjerPVPyng9MvKllkqUUqulwTatElH+IfwFocn31O+vIP7et0Eii3PtJWFDXDQTl7FLOEFO8qDHpm04+b3bRq1GlGJIKcu+JJXIX67fQKQzzcmQ9C2f22f8= lichPC </span><br></pre></td></tr></table></figure>
+
+<h3 id="VS-code-添加远程服务"><a href="#VS-code-添加远程服务" class="headerlink" title="VS code 添加远程服务"></a>VS code 添加远程服务</h3><p>VS Code 安装 remote SSH 插件后,输入 <code>ssh pi@lich.tech -p 15001</code> 连接服务器</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IaC/" rel="tag"># IaC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/16/%E5%A5%87%E8%BF%B9%E9%A1%B9%E7%9B%AE-%E5%8D%9A%E5%BE%B7%E4%B9%8B%E9%97%A83/" rel="prev" title="奇迹项目-博德之门3">
+                  <i class="fa fa-angle-left"></i> 奇迹项目-博德之门3
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/02/08/%E4%B8%AD%E5%9B%BD%E4%BA%92%E8%81%94%E7%BD%91%E5%BE%80%E4%BA%8B/" rel="next" title="中国互联网往事">
+                  中国互联网往事 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Lich Wang</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"http://blog.lich.tech/2024/01/08/hexo%E6%90%AD%E5%BB%BA/"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+</body>
+</html>
